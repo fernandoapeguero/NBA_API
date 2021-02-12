@@ -8,4 +8,4 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 DEBUG = True
 
 # Connect to the database
-SQLALCHEMY_DATABASE_URI  = f"postgresql://postgres:2225@localhost:5432/events"
+SQLALCHEMY_DATABASE_URI  = f"postgresql://postgres:2225@localhost:5432/nba"
