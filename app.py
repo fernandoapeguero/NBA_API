@@ -1,6 +1,7 @@
 from models import app, db, Venue, Team, Events
 from flask import jsonify
 from auth import requires_auth
+from flask import Flask
 
 
 @app.route('/')
