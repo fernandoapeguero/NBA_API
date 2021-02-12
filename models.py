@@ -8,20 +8,12 @@ app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 
 db = SQLAlchemy(app)
 
-
-# set up models for api 
-# i was thinking about doing a dealership models or something else 
-# maybe 
-
-
-# nba theme models team model - venue model - events model 
-
 class Team(db.Model):
     __tablename__ = 'teams'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), nullable=False)
-    championship_wins = db.Column(db.Integer)
+    home_state = db.Column(db.String(), nullable=False)
 
 
 class Venue(db.Model):
@@ -37,6 +29,13 @@ class Venue(db.Model):
 
 class Events(db.Model):
     __tablename__ = 'events'
-    pass
+    
+    id = db.Column(db.Integer, primary_key=True)
+    team_id = db.Column(db.integer(), db.ForeignKey('teams.id'))
+    venue_id = db.Column(db.integer(), db.ForeignKey('venues.id'))
+
+    team = db.relationship(Team, backref=db.backref('events', cascade='all,delete'))
+    venue = db.relationship(Venue, backref=db.backref('events', cascade='all,delete'))
+    
 
 
