@@ -15,20 +15,40 @@ class Team(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), nullable=False)
-    wins = db.Column(db.String(10), nullable=True, default=0)
-    losses = db.Column(db.String(10), nullable=True, default=0)
+    logo = db.Column(db.String(500))
+    wins = db.Column(db.String(10), default=0)
+    losses = db.Column(db.String(10), default=0)
     home_state = db.Column(db.String(), nullable=False)
 
+    def __init__(self, name, logo, wins, losses,home_state):
+        
+        self.name = name
+        self.logo = logo
+        self.wins = wins
+        self.losses = losses
+        self.home_state = home_state
+
+
+    def get_team_info(self):
+
+        return {
+            "name": self.name,
+            "logo": self.logo,
+            "wins": self.wins,
+            "losses": self.losses,
+            "home_state": self.home_state 
+        }
 
 class Venue(db.Model):
     __tablename__ = 'venues'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    image = db.Column(db.String(500), nullable=True)
+    image = db.Column(db.String(500))
     address = db.Column(db.String(150))
     city = db.Column(db.String(50))
     zipcode = db.Column(db.String(10))
+    description = db.Column(db.String())
     is_available = db.Column(db.Boolean(), nullable=False)
 
 
@@ -37,7 +57,7 @@ class Events(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     start_time = db.Column(db.DateTime())
-    
+
     team_id = db.Column(db.Integer(), db.ForeignKey('teams.id'))
     venue_id = db.Column(db.Integer(), db.ForeignKey('venues.id'))
 
