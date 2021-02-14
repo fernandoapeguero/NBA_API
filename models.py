@@ -102,7 +102,7 @@ class Player(db.Model):
             "first_name": self.first_name,
             "last_name": self.last_name,
             "team": self.team,
-            "minutes_per_game": self.ppg,
+            "minutes_per_game": self.mpg,
             "points_per_game": self.ppg,
             "rebounds_per_game": self.rpg,
             "assistance_per_game": self.apg

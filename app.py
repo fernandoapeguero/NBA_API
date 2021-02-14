@@ -19,23 +19,34 @@ def index():
 @app.route('/players/<int:team_id>')
 def get_players(team_id):
 
-    #use team id to get players 
+    # if you pass in the value 0 for team it will give you all the players in every team 
+
+    error = False 
+    players = []
     try:
+        player_list = None
+        if team_id > 0:
+            player_list = Player.query.filter(Player.team_id == team_id).all()
+        else:
+            # order by tema id later
+            player_list = Player.query.all()
 
-        players = Player.query.filter(1 == Player.team_id).all()
-
-        print(players.get_player_info())
-
-        return jsonify({
-            'success': True,
-            'players': [],
-
-
-        })
+        if player_list:
+            for player in player_list:
+                players.append(player.get_player_info())
     except:
+        error = True
         db.session.rollback()
     finally:
         db.session.close()
+
+    if error:
+        abort(404)
+    else:
+        return jsonify({
+                'success': True,
+                'players': players
+            })
 
 @app.route('/teams')
 def get_teams():
