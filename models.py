@@ -66,3 +66,46 @@ class Events(db.Model):
     
 
 
+# created a player model after the statistic spreadsheet online with a foreighn key to the team id to the player 
+
+class Player(db.Model):
+
+    __tablename__ = 'players'
+
+    id = db.Column(db.Integer(), primary_key=True)
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    team = db.Column(db.String(50), nullable=False)
+    # Minutes per game
+    mpg = db.Column(db.Float())
+    # Points per Game
+    ppg = db.Column(db.Float())
+    # Rebound per game
+    rpg = db.Column(db.Float())
+    #assistance per game 
+    apg = db.Column(db.Float())
+
+    team_id = db.Column(db.Integer(), db.ForeignKey('teams.id'))
+
+    def __init__(self, first_name, last_name, team, mpg, ppg, rpg, apg):
+        self.first_name = first_name
+        self.last_name = last_name
+        self.team = team
+        self.mpg = mpg 
+        self.ppg = ppg
+        self.rpg = rpg
+        self.apg = apg
+
+    
+
+    def get_player_info(self):
+
+        return {
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "team": self.team,
+            "minutes_per_game": self.ppg,
+            "points_per_game": self.ppg,
+            "rebounds_per_game": self.rpg,
+            "assistance_per_game": self.apg
+        }
