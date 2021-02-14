@@ -66,8 +66,6 @@ class Events(db.Model):
     
 
 
-# created a player model after the statistic spreadsheet online with a foreighn key to the team id to the player 
-
 class Player(db.Model):
 
     __tablename__ = 'players'
