@@ -64,5 +64,3 @@ class Events(db.Model):
     team = db.relationship(Team, backref=db.backref('events', cascade='all,delete'))
     venue = db.relationship(Venue, backref=db.backref('events', cascade='all,delete'))
     
-
-
