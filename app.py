@@ -30,7 +30,11 @@ def get_players():
 
     try:
         search_term = request.args.get('search_term')
-        players_list = Player.query.filter(or_(Player.first_name.ilike(f'%{search_term}%'),Player.last_name.ilike(f'%{search_term}%'))).all()
+        players_list = ''
+        if search_term:
+            players_list = Player.query.filter(or_(Player.first_name.ilike(f'%{search_term}%'),Player.last_name.ilike(f'%{search_term}%'))).all()
+        else: 
+            players_list = Player.query.all()
 
         if players_list:
             for player in players_list:
