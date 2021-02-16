@@ -122,6 +122,10 @@ def get_teams():
     if error:
         abort(404)
 
+@app.route('/events')
+def get_events():
+    
+    return 'Not implemented yet '
 
 
 if __name__ == "__main__":
