@@ -122,9 +122,40 @@ def get_teams():
     if error:
         abort(404)
 
-@app.route('/events')
-def get_events():
-    
+@app.route('/events/<int:event_id>')
+def get_events(event_id):
+
+    events = []
+    error = False
+
+    # {
+    #     'events': 1,
+    #     'team_one': 'bulls',
+    #     'team_two': 'celtics',
+    #     'event_date': '2021-05-18',
+    #     'event_time': '20:30:00'
+    # }
+    try:
+        print(event_id)
+        event_list = ''
+        if event_id > 0:
+
+            event_list = Events.query.filter(Events.id == event_id).first()
+        else:
+            event_list = Events.query.all()
+
+        if event_list:
+            for event in event_list:
+                events.append(event.)
+        else:
+            abort(404)
+
+
+    except:
+        db.session.rollback()
+    finally:
+        db.session.close()
+
     return 'Not implemented yet '
 
 
