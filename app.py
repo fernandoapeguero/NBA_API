@@ -135,28 +135,15 @@ def get_events(event_id):
     #     'event_date': '2021-05-18',
     #     'event_time': '20:30:00'
     # }
-    try:
-        print(event_id)
-        event_list = ''
-        if event_id > 0:
 
-            event_list = Events.query.filter(Events.id == event_id).first()
-        else:
-            event_list = Events.query.all()
+    event = Events.query.get(2)
 
-        if event_list:
-            for event in event_list:
-                events.append(event.)
-        else:
-            abort(404)
+    print(event)
 
-
-    except:
-        db.session.rollback()
-    finally:
-        db.session.close()
-
-    return 'Not implemented yet '
+    return jsonify({
+        'success': True,
+        'events': []
+    })
 
 
 if __name__ == "__main__":

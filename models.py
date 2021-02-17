@@ -1,6 +1,7 @@
 from operator import truediv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import backref
 from config import SQLALCHEMY_DATABASE_URI
 
 app = Flask(__name__)
@@ -62,7 +63,8 @@ class Events(db.Model):
     team_id_two = db.Column(db.Integer(), db.ForeignKey('teams.id'))
     venue_id = db.Column(db.Integer(), db.ForeignKey('venues.id'))
 
-    team = db.relationship(Team, backref=db.backref('events', cascade='all,delete'))
+    team = db.relationship(Team, backref=db.backref('events', cascade='all,delete'), foreign_keys=[team_id])
+    team_two = db.relationship(Team, backref=db.backref('team_events', cascade='all,delete'), foreign_keys=[team_id_two])
     venue = db.relationship(Venue, backref=db.backref('events', cascade='all,delete'))
 class Player(db.Model):
 
