@@ -6,7 +6,6 @@ from flask import Flask, abort
 from sqlalchemy import or_
 
 
-
 @app.route('/')
 def index():
 
@@ -128,22 +127,45 @@ def get_events(event_id):
     events = []
     error = False
 
-    # {
-    #     'events': 1,
-    #     'team_one': 'bulls',
-    #     'team_two': 'celtics',
-    #     'event_date': '2021-05-18',
-    #     'event_time': '20:30:00'
-    # }
+    try:
+        event_list = ''
 
-    event = Events.query.get(2)
+        if event_id > 0:
 
-    print(event)
+            event_list = Events.query.filter(Events.id == event_id).all()
 
-    return jsonify({
-        'success': True,
-        'events': []
-    })
+        else:
+            event_list = Events.query.all()
+
+        
+        if event_list:
+            for event in event_list:
+                team = Team.query.get(event.team_id)
+                team_two = Team.query.get(event.team_id_two)
+                venue = Venue.query.get(event.venue_id)
+
+                events.append({
+                    'id': event.id,
+                    'venue': venue.name,
+                    'team_one': team.name,
+                    'team_two': team_two.name,
+                    'start_time': event.start_time,
+                })
+
+    except:
+        error = True
+        db.session.rollback()
+    finally:
+        db.session.close()
+
+    if error:
+        abort(404)
+    else:
+        return jsonify({
+            'success': True,
+            'events': events,
+            'number_of_events': len(events)
+        })
 
 
 if __name__ == "__main__":
