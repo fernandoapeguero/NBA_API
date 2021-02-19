@@ -2,15 +2,20 @@ from operator import truediv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import backref
-from config import SQLALCHEMY_DATABASE_URI
 
-app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+database_name = "nba"
+database_path = "postgresql://{}@{}/{}".format('postgres:2225' ,'localhost:5432', database_name)
 
-db = SQLAlchemy(app)
+db = SQLAlchemy()
 
+def setup_db(app, database_path=database_path):
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_path
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    db.app = app
+    db.init_app(app)
+    # uncomment if not using flask migration 
+    db.create_all()
 class Team(db.Model):
     __tablename__ = 'teams'
 
@@ -29,8 +34,18 @@ class Team(db.Model):
         self.losses = losses
         self.home_state = home_state
 
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
 
-    def get_team_info(self):
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    def format(self):
 
         return {
             "name": self.name,
@@ -51,6 +66,40 @@ class Venue(db.Model):
     zipcode = db.Column(db.String(10))
     description = db.Column(db.String())
     is_available = db.Column(db.Boolean(), nullable=False)
+
+    def __init__(self, name, image, address, city, zipcode, description, is_available):
+        self.name = name
+        self.image = image
+        self.address = address 
+        self.city = city 
+        self.zipcode = zipcode 
+        self.description = description
+        self.is_available = is_available
+
+    
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    def format(self):
+
+        return {
+            'id': self.id,
+            'venue_name': self.name,
+            'venue_image': self.image,
+            'venue_address': self.address,
+            'venue_city': self.city,
+            'venue_zipcode': self.zipcode,
+            'venue_description': self.description,
+            'venue_is_available': self.is_available
+        }
 
 
 class Events(db.Model):
@@ -94,9 +143,18 @@ class Player(db.Model):
         self.rpg = rpg
         self.apg = apg
 
-    
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
 
-    def get_player_info(self):
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    def format(self):
 
         return {
             "first_name": self.first_name,

@@ -1,172 +1,169 @@
-from sqlalchemy.sql.expression import false, true
-from models import app, db, Venue, Team, Events, Player
+from werkzeug import exceptions
+from models import setup_db, Venue, Team, Events, Player
 from flask import jsonify, request
 from auth import requires_auth
 from flask import Flask, abort
 from sqlalchemy import or_
+from flask_cors import CORS
 
 
-@app.route('/')
-def index():
+def create_app(text_config=None):
+    app = Flask(__name__)
+    setup_db(app)
 
-    return f"Teams Api Home endpoint"
+    cors = CORS(app, resources={r'/nba/*': {'origins': '*'}})
 
-# update, Put, Delete, Post require Authentication 
-# get does not 
+    @app.after_request
+    def after_request(reponse):
+        reponse.headers.add('Access-Control-Allow-Headers',
+                            'Content-Type,Authorization,true')
+        reponse.headers.add('Access-Control-Allow-Method',
+                            'GET,PATCH ,POST, DELETE , OPTIONS')
+        return reponse
 
-# write api to get teams on the api does not require authentificaton 
-# return a list of teams 10 per page you can change page number by adding page number to query 
-# include a query parameter to paginated the pafes as well page size
+    PAGINATiON_COUNT = 10
+
+    def paginate(request, selection):
+    
+        page = request.args.get('page', 1, type=int)
+        start = (page - 1) * PAGINATiON_COUNT
+        end = start + PAGINATiON_COUNT
+
+        info = [information.format() for information in selection]
+
+        formatted_info = info[start:end]
+
+        return formatted_info
+
+    @app.route('/')
+    def index():
+
+        return f"Teams Api Home endpoint"
+
+    # update, Put, Delete, Post require Authentication 
+    # get does not 
+
+    # write api to get teams on the api does not require authentificaton 
+    # return a list of teams 10 per page you can change page number by adding page number to query 
+    # include a query parameter to paginated the pafes as well page size
 
 
-# Get Endpoints group 
+    # Get Endpoints group 
 
-@app.route('/players')
-def get_players():
+    @app.route('/players')
+    def get_players():
 
-    players = []
-    error = False
+        try:
+            players = []
 
-    try:
-        search_term = request.args.get('search_term')
-        players_list = ''
-        if search_term:
-            players_list = Player.query.filter(or_(Player.first_name.ilike(f'%{search_term}%'),Player.last_name.ilike(f'%{search_term}%'))).all()
-        else: 
-            players_list = Player.query.all()
+            search_term = request.args.get('search_term')
+            players_list = ''
+            if search_term:
+                players_list = Player.query.filter(or_(Player.first_name.ilike(f'%{search_term}%'),Player.last_name.ilike(f'%{search_term}%'))).all()
+            else: 
+                players_list = Player.query.all()
 
-        if players_list:
-            for player in players_list:
-                players.append(player.get_player_info())
-    except:
-        error = True
-        db.session.rollback()
-    finally:
-        db.session.close()
-
-    if error:
-        abort(404)
-    else:
-        return jsonify({
-            'success': True,
-            'players': players,
-            'number_of_players': len(players)
-        })
-
-@app.route('/players/<int:team_id>')
-def get_all_players(team_id):
-
-    # if you pass in the value 0 for team it will give you all the players in every team 
-
-    error = False 
-    players = []
-    try:
-        player_list = None
-        if team_id > 0:
-            player_list = Player.query.filter(Player.team_id == team_id).all()
-        else:
-            # order by tema id later
-            player_list = Player.query.all()
-
-        if player_list:
-            for player in player_list:
-                players.append(player.get_player_info())
-    except:
-        error = True
-        db.session.rollback()
-    finally:
-        db.session.close()
-
-    if error:
-        abort(404)
-    else:
-        return jsonify({
+            if players_list:
+                players = paginate(request, players_list)
+            
+            return jsonify({
                 'success': True,
                 'players': players,
                 'number_of_players': len(players)
-            })
-
-@app.route('/teams')
-def get_teams():
-
-    teams = []
-    error =  False
-    try:
-        search_term = request.args.get('search_term')
-        team = ''
-        if search_term:
-            team = Team.query.filter(Team.name.ilike(f'%{search_term}%')).all()
-            print(team)
-        else:
-            team = Team.query.all()
-
-        print(search_term)
-
-
-        for t in team:
-            teams.append(t.get_team_info())
-
-        return jsonify({
-            'success': True,
-            'teams': teams,
-            'number_of_teams': len(teams)
-        })
+            }), 200
+        except:
+            abort(404)
         
-    except:
-        error = True
-        db.session.rollback()
-    finally:
-        db.session.close()
 
-    if error:
-        abort(404)
+    @app.route('/players/<int:player_id>')
+    def get_players_by_id(player_id):
 
-@app.route('/events/<int:event_id>')
-def get_events(event_id):
+        # if you pass in the value 0 for team it will give you all the players in every team 
+        try:
+            
+            player = Player.query.get(player_id)
+            
+            return jsonify({
+                    'success': True,
+                    'players': player.format()
+            }), 200
+        except:
+            abort(404)
 
-    events = []
-    error = False
+    @app.route('/teams')
+    def get_teams():
 
-    try:
-        event_list = ''
+        teams = []
+        try:
+            search_term = request.args.get('search_term')
+            team_list = None
+            if search_term:
+                team_list = Team.query.filter(Team.name.ilike(f'%{search_term}%')).all()
+            else:
+                team_list = Team.query.all()
 
-        if event_id > 0:
+            if team_list:
+                teams = paginate(request, team_list)
 
-            event_list = Events.query.filter(Events.id == event_id).all()
+            return jsonify({
+                'success': True,
+                'teams': teams,
+                'number_of_teams': len(teams)
+            }), 200
 
-        else:
-            event_list = Events.query.all()
+        except:
+            abort(404)
 
+    @app.route('/teams/<int:team_id>')
+    def get_team_by_id(team_id):
         
-        if event_list:
-            for event in event_list:
-                team = Team.query.get(event.team_id)
-                team_two = Team.query.get(event.team_id_two)
-                venue = Venue.query.get(event.venue_id)
+        try:
+            team = Team.query.get(team_id)
 
-                events.append({
-                    'id': event.id,
-                    'venue': venue.name,
-                    'team_one': team.name,
-                    'team_two': team_two.name,
-                    'start_time': event.start_time,
-                })
-
-    except:
-        error = True
-        db.session.rollback()
-    finally:
-        db.session.close()
-
-    if error:
-        abort(404)
-    else:
-        return jsonify({
-            'success': True,
-            'events': events,
-            'number_of_events': len(events)
-        })
+            return {
+                'success': True,
+                'team': team.format()
+            }
+        except:
+            abort(404)
 
 
-if __name__ == "__main__":
-    app.run()
+    @app.route('/events/<int:event_id>')
+    def get_events(event_id):
+
+        try:
+            events = []
+
+            event_list = ''
+
+            if event_id > 0:
+
+                event_list = Events.query.filter(Events.id == event_id).all()
+
+            else:
+                event_list = Events.query.all()
+
+            if event_list:
+                for event in event_list:
+                    team = Team.query.get(event.team_id)
+                    team_two = Team.query.get(event.team_id_two)
+                    venue = Venue.query.get(event.venue_id)
+
+                    events.append({
+                        'id': event.id,
+                        'venue': venue.name,
+                        'team_one': team.name,
+                        'team_two': team_two.name,
+                        'start_time': event.start_time,
+                    })
+
+            return jsonify({
+                'success': True,
+                'events': events,
+                'number_of_events': len(events)
+            }), 200
+        except:
+            abort(404)
+            
+
+    return app
