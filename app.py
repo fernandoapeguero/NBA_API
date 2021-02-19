@@ -128,39 +128,47 @@ def create_app(text_config=None):
             abort(404)
 
 
+    # @app.route('/events')
+    # def get_events():
+    #     pass
+
+    #     # try:
+    #     #     search_term = request.args.get('search_term')
+    #     #     Events = []
+
+    #     #     event_list = None
+    #     #     if search_term:
+    #     #         event_list = Events.query.filter()
+    #     #     else:
+                
+    #     # except:
+    #     #     abort(404)
+
+
     @app.route('/events/<int:event_id>')
-    def get_events(event_id):
+    def get_events_by_id(event_id):
 
         try:
-            events = []
+            event = None
 
-            event_list = ''
+            event_data = Events.query.get(event_id)
 
-            if event_id > 0:
+            if event_data:
+                team = Team.query.get(event_data.team_id)
+                team_two = Team.query.get(event_data.team_id_two)
+                venue = Venue.query.get(event_data.venue_id)
 
-                event_list = Events.query.filter(Events.id == event_id).all()
-
-            else:
-                event_list = Events.query.all()
-
-            if event_list:
-                for event in event_list:
-                    team = Team.query.get(event.team_id)
-                    team_two = Team.query.get(event.team_id_two)
-                    venue = Venue.query.get(event.venue_id)
-
-                    events.append({
-                        'id': event.id,
-                        'venue': venue.name,
-                        'team_one': team.name,
-                        'team_two': team_two.name,
-                        'start_time': event.start_time,
-                    })
+                event = {
+                    'id': event_data.id,
+                    'venue': venue.name,
+                    'team_one': team.name,
+                    'team_two': team_two.name,
+                    'start_time': event_data.start_time,
+                }
 
             return jsonify({
                 'success': True,
-                'events': events,
-                'number_of_events': len(events)
+                'events': event
             }), 200
         except:
             abort(404)
