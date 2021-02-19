@@ -1,4 +1,4 @@
-from werkzeug import exceptions
+from sqlalchemy.sql.expression import asc, desc, null
 from models import setup_db, Venue, Team, Events, Player
 from flask import jsonify, request
 from auth import requires_auth
@@ -34,6 +34,31 @@ def create_app(text_config=None):
         formatted_info = info[start:end]
 
         return formatted_info
+
+    def paginated_events(request, event_list):
+        page = request.args.get('page', 1, type=int)
+        start = (page - 1) * PAGINATiON_COUNT
+        end = start + PAGINATiON_COUNT
+
+        events = []
+
+        for event_data in event_list:
+                    team = Team.query.get(event_data.team_id)
+                    team_two = Team.query.get(event_data.team_id_two)
+                    venue = Venue.query.get(event_data.venue_id)
+
+                    events.append({
+                        'id': event_data.id,
+                        'venue': venue.name,
+                        'team_one': team.name,
+                        'team_two': team_two.name,
+                        'start_time': event_data.start_time,
+                    })
+
+        paginated_events = events[start:end]
+
+        return paginated_events
+
 
     @app.route('/')
     def index():
@@ -128,21 +153,24 @@ def create_app(text_config=None):
             abort(404)
 
 
-    # @app.route('/events')
-    # def get_events():
-    #     pass
+    @app.route('/events')
+    def get_events():
 
-    #     # try:
-    #     #     search_term = request.args.get('search_term')
-    #     #     Events = []
+        try:
+            events =  []
 
-    #     #     event_list = None
-    #     #     if search_term:
-    #     #         event_list = Events.query.filter()
-    #     #     else:
-                
-    #     # except:
-    #     #     abort(404)
+            event_list = Events.query.order_by(desc(Events.id)).all()
+
+            if event_list:
+                events = paginated_events(request, event_list)
+
+            return jsonify({
+                'success': True,
+                'events': events,
+                'total_events': len(event_list)
+            })
+        except:
+            abort(404)
 
 
     @app.route('/events/<int:event_id>')
@@ -172,6 +200,123 @@ def create_app(text_config=None):
             }), 200
         except:
             abort(404)
+
+
+    # Post Endpoints Group
+
+    @app.route('/players', methods=['POST'])
+    def post_player():
+
+        try:
+            player_data = request.get_json()
+
+            first_name = player_data.get('first_name')
+            last_name = player_data.get('last_name')
+            team = player_data.get('team')
+            mpg = player_data.get('mpg')
+            ppg = player_data.get('ppg')
+            rpg = player_data.get('rpg')
+            apg = player_data.get('apg')
+            team_id = player_data.get('team_id')
+
+            player = Player(
+                first_name=first_name,
+                last_name=last_name,
+                team=team,
+                mpg=mpg,
+                ppg=ppg,
+                rpg=rpg,
+                apg=apg,
+                team_id=team_id
+            )
             
+            player.insert()
+
+            return jsonify({
+                'success': True,
+                'player': player.format()
+            }), 200
+
+        except:
+            abort(400)
+        
+    @app.route('/teams', methods=['POST'])
+    def post_team():
+        try:
+            team_data = request.get_json()
+
+            name = team_data.get('name')
+            home_state = team_data.get('home_state')
+            losses = team_data.get('losses')
+            wins = team_data.get('wins')
+            logo = team_data.get('logo')
+
+            team = Team(
+                name=name,
+                home_state=home_state,
+                losses=losses,
+                wins=wins,
+                logo=logo
+            )
+
+            team.insert()
+
+            return jsonify({
+                'success': True,
+                'team': team.format()
+            }), 200
+        except:
+            abort(400)
+
+
+    # Error Handling
+
+
+    @app.errorhandler(400)
+    def invalid_syntax(error):
+
+        return jsonify({
+            'success': False,
+            'error': error.code,
+            'message': 'Invalid syntax '
+        }), error.code
+
+
+    @app.errorhandler(404)
+    def invalid_syntax(error):
+
+        return jsonify({
+            'success': False,
+            'error': error.code,
+            'message': 'Not Found '
+        }), error.code
+
+    @app.errorhandler(405)
+    def invalid_syntax(error):
+
+        return jsonify({
+            'success': False,
+            'error': error.code,
+            'message': 'Method Not Allow'
+        }), error.code
+
+    @app.errorhandler(422)
+    def invalid_syntax(error):
+
+        return jsonify({
+            'success': False,
+            'error': error.code,
+            'message': 'Unproccesable'
+        }), error.code
+
+
+    @app.errorhandler(500)
+    def invalid_syntax(error):
+
+        return jsonify({
+            'success': False,
+            'error': error.code,
+            'message': 'Internal Error'
+        }), error.code
 
     return app

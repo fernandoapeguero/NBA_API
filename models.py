@@ -1,3 +1,4 @@
+from enum import unique
 from operator import truediv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -20,7 +21,7 @@ class Team(db.Model):
     __tablename__ = 'teams'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(150), nullable=False)
+    name = db.Column(db.String(150), nullable=False, unique=True)
     logo = db.Column(db.String(500))
     wins = db.Column(db.String(10), default=0)
     losses = db.Column(db.String(10), default=0)
@@ -134,7 +135,7 @@ class Player(db.Model):
 
     team_id = db.Column(db.Integer(), db.ForeignKey('teams.id'))
 
-    def __init__(self, first_name, last_name, team, mpg, ppg, rpg, apg):
+    def __init__(self, first_name, last_name, team, mpg, ppg, rpg, apg, team_id):
         self.first_name = first_name
         self.last_name = last_name
         self.team = team
@@ -142,6 +143,7 @@ class Player(db.Model):
         self.ppg = ppg
         self.rpg = rpg
         self.apg = apg
+        self.team_id = team_id
 
     def insert(self):
         db.session.add(self)
