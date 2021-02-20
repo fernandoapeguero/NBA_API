@@ -16,7 +16,7 @@ def setup_db(app, database_path=database_path):
     db.app = app
     db.init_app(app)
     # uncomment if not using flask migration 
-    db.create_all()
+    # db.create_all()
 class Team(db.Model):
     __tablename__ = 'teams'
 
@@ -119,8 +119,7 @@ class Events(db.Model):
     team = db.relationship(Team, backref=db.backref('events', cascade='all,delete'), foreign_keys=[team_id])
     team_two = db.relationship(Team, backref=db.backref('team_events', cascade='all,delete'), foreign_keys=[team_id_two])
     venue = db.relationship(Venue, backref=db.backref('events', cascade='all,delete'))
-
-
+    
 
     def __init__(self, team_id, team_id_two, venue_id, start_time, team_one_score = 0, team_two_score = 0):
         

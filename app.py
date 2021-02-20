@@ -74,7 +74,7 @@ def create_app(text_config=None):
     # include a query parameter to paginated the pafes as well page size
 
 
-    # Get Endpoints group 
+    # GET Endpoints group 
 
     @app.route('/players')
     def get_players():
@@ -203,7 +203,7 @@ def create_app(text_config=None):
             abort(404)
 
 
-    # Post Endpoints Group
+    # POST Endpoints Group
 
     @app.route('/players', methods=['POST'])
     def post_player():
@@ -248,9 +248,9 @@ def create_app(text_config=None):
 
             name = team_data.get('name')
             home_state = team_data.get('home_state')
-            losses = team_data.get('losses')
-            wins = team_data.get('wins')
-            logo = team_data.get('logo')
+            losses = team_data.get('losses') or 0
+            wins = team_data.get('wins') or 0
+            logo = team_data.get('logo') or ''
 
             team = Team(
                 name=name,
@@ -276,13 +276,14 @@ def create_app(text_config=None):
 
         try:
             event_data = request.get_json()
-
+            print(event_data)
             team_id_one = event_data.get('team_one_id')
             team_id_two =  event_data.get('team_two_id')
             venue_id = event_data.get('venue_id')
             start_time = event_data.get('start_time')
             team_one_score = event_data.get('team_one_score') or 0
             team_two_score = event_data.get('team_one_score') or 0
+
 
             event = Events(
                 team_id = team_id_one,
@@ -294,7 +295,7 @@ def create_app(text_config=None):
             )
 
             event.insert()
-
+            
             formatted_event = paginated_events(request, [event])
 
             return jsonify({
@@ -302,10 +303,85 @@ def create_app(text_config=None):
                 'event': formatted_event[0]
             }), 200
 
-        except: 
+        except:
             abort(400)
 
+    # PATH Endpoints Group
 
+    @app.route('/players/<int:player_id>', methods=['PATCH'])
+    def patch_player(player_id):
+
+        try:
+            player = Player.query.get(player_id)
+            player_data = request.get_json()
+
+            player.first_name = player_data.get('first_name') or player.first_name
+            player.last_name = player_data.get('last_name') or player.last_name
+            player.team = player_data.get('team') or player.team
+            player.mpg = player_data.get('mpg') or player.mpg
+            player.ppg = player_data.get('ppg') or player.ppg
+            player.rpg = player_data.get('rpg') or player.rpg
+            player.apg = player_data.get('apg') or player.apg
+            player.team_id = player_data.get('team_id') or player.team_id
+            
+            player.update()
+
+            return jsonify({
+                'success': True,
+                'player': player.format()
+            }), 200
+
+        except:
+            abort(422)
+
+    
+    @app.route('/teams/<int:team_id>', methods=['PATCH'])
+    def patch_team(team_id):
+
+        try: 
+            team = Team.query.get(team_id)
+            team_data = request.get_json()
+
+            team.name = team_data.get('name') or team.name
+            team.home_state = team_data.get('home_state') or team.home_state
+            team.losses = team_data.get('losses') or team.losses
+            team.wins = team_data.get('wins') or team.wins
+            team.logo = team_data.get('logo') or team.logo
+
+            team.update()
+
+            return jsonify({
+                'success': True,
+                'team': team.format()
+            }), 200
+        except:
+            abort(422)
+
+
+    @app.route('/events/<int:event_id>' , methods=['PATCH'])
+    def patch_events(event_id):
+
+        try:
+            event = Events.query.get(event_id)
+            event_data = request.get_json()
+
+            event.team_id = event_data.get('team_one_id') or event.team_id
+            event.team_id_two = event_data.get('team_id_two') or event.team_id_two
+            event.venue_id = event_data.get('venue_id') or event.venue_id
+            event.team_one_score = event_data.get('team_one_score') or event.team_one_score
+            event.team_two_score = event_data.get('team_two_score') or event.team_two_score
+
+            event.update()
+
+            formatted_event = paginated_events(request, [event])
+
+            return jsonify({
+                'success': True,
+                'event': formatted_event[0]
+            })
+        
+        except:
+            abort(422)
     # Error Handling
 
 
