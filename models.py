@@ -109,6 +109,9 @@ class Events(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     start_time = db.Column(db.DateTime())
 
+    team_one_score = db.Column(db.Integer(), nullable=True, default=0)
+    team_two_score = db.Column(db.Integer(), nullable=True, default=0)
+
     team_id = db.Column(db.Integer(), db.ForeignKey('teams.id'))
     team_id_two = db.Column(db.Integer(), db.ForeignKey('teams.id'))
     venue_id = db.Column(db.Integer(), db.ForeignKey('venues.id'))
@@ -116,6 +119,29 @@ class Events(db.Model):
     team = db.relationship(Team, backref=db.backref('events', cascade='all,delete'), foreign_keys=[team_id])
     team_two = db.relationship(Team, backref=db.backref('team_events', cascade='all,delete'), foreign_keys=[team_id_two])
     venue = db.relationship(Venue, backref=db.backref('events', cascade='all,delete'))
+
+
+
+    def __init__(self, team_id, team_id_two, venue_id, start_time, team_one_score = 0, team_two_score = 0):
+        
+        self.team_id = team_id
+        self.team_id_two = team_id_two
+        self.venue_id = venue_id
+        self.start_time = start_time
+        self.team_one_score = team_one_score
+        self.team_two_score = team_two_score
+
+
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
 class Player(db.Model):
 
     __tablename__ = 'players'

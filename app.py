@@ -1,6 +1,7 @@
+from threading import Event
 from sqlalchemy.sql.expression import asc, desc, null
 from models import setup_db, Venue, Team, Events, Player
-from flask import jsonify, request
+from flask import json, jsonify, request
 from auth import requires_auth
 from flask import Flask, abort
 from sqlalchemy import or_
@@ -266,6 +267,42 @@ def create_app(text_config=None):
                 'team': team.format()
             }), 200
         except:
+            abort(400)
+
+
+
+    @app.route('/events' , methods=['POST'])
+    def post_event():
+
+        try:
+            event_data = request.get_json()
+
+            team_id_one = event_data.get('team_one_id')
+            team_id_two =  event_data.get('team_two_id')
+            venue_id = event_data.get('venue_id')
+            start_time = event_data.get('start_time')
+            team_one_score = event_data.get('team_one_score') or 0
+            team_two_score = event_data.get('team_one_score') or 0
+
+            event = Events(
+                team_id = team_id_one,
+                team_id_two = team_id_two,
+                venue_id = venue_id,
+                start_time = start_time,
+                team_one_score = team_one_score,
+                team_two_score = team_two_score
+            )
+
+            event.insert()
+
+            formatted_event = paginated_events(request, [event])
+
+            return jsonify({
+                'success': True,
+                'event': formatted_event[0]
+            }), 200
+
+        except: 
             abort(400)
 
 
