@@ -85,9 +85,9 @@ def create_app(text_config=None):
             search_term = request.args.get('search_term')
             players_list = ''
             if search_term:
-                players_list = Player.query.filter(or_(Player.first_name.ilike(f'%{search_term}%'),Player.last_name.ilike(f'%{search_term}%'))).all()
+                players_list = Player.query.filter(or_(Player.first_name.ilike(f'%{search_term}%'),Player.last_name.ilike(f'%{search_term}%'))).order_by('id').all()
             else: 
-                players_list = Player.query.all()
+                players_list = Player.query.order_by('id').all()
 
             if players_list:
                 players = paginate(request, players_list)
@@ -104,7 +104,6 @@ def create_app(text_config=None):
     @app.route('/players/<int:player_id>')
     def get_players_by_id(player_id):
 
-        # if you pass in the value 0 for team it will give you all the players in every team 
         try:
             
             player = Player.query.get(player_id)
@@ -124,9 +123,9 @@ def create_app(text_config=None):
             search_term = request.args.get('search_term')
             team_list = None
             if search_term:
-                team_list = Team.query.filter(Team.name.ilike(f'%{search_term}%')).all()
+                team_list = Team.query.filter(Team.name.ilike(f'%{search_term}%')).order_by('id').all()
             else:
-                team_list = Team.query.all()
+                team_list = Team.query.order_by('id').all()
 
             if team_list:
                 teams = paginate(request, team_list)
@@ -153,6 +152,43 @@ def create_app(text_config=None):
         except:
             abort(404)
 
+    @app.route('/venues')
+    def get_venues():
+
+
+        try:
+
+            search_term = request.args.get('search_term')
+
+            venues = None
+            if search_term:
+                venues = Venue.query.filter(Venue.name.ilike(f'%{search_term}%')).order_by('id').all()
+            else:
+                venues = Venue.query.order_by('id').all()
+
+
+            formatted_venues = paginate(request, venues)
+
+            return {
+                'success': True,
+                'venues': formatted_venues,
+                'total_venues': len(venues)
+            }
+        except:
+            abort(404)
+
+    @app.route('/venues/<int:venue_id>')
+    def get_venue_by_id(venue_id):
+
+        try:
+            venue = Venue.query.get(venue_id)
+
+            return jsonify({
+                'success': True,
+                'venue': venue.format()
+            })
+        except:
+            abort(404)
 
     @app.route('/events')
     def get_events():
@@ -160,7 +196,7 @@ def create_app(text_config=None):
         try:
             events =  []
 
-            event_list = Events.query.order_by(desc(Events.id)).all()
+            event_list = Events.query.order_by('id').all()
 
             if event_list:
                 events = paginated_events(request, event_list)
@@ -253,15 +289,15 @@ def create_app(text_config=None):
             logo = team_data.get('logo') or ''
 
             team = Team(
-                name=name,
-                home_state=home_state,
-                losses=losses,
-                wins=wins,
-                logo=logo
+                name = name,
+                home_state = home_state,
+                losses = losses,
+                wins = wins,
+                logo = logo
             )
 
             team.insert()
-
+            print('de verdad ')
             return jsonify({
                 'success': True,
                 'team': team.format()
@@ -269,14 +305,46 @@ def create_app(text_config=None):
         except:
             abort(400)
 
+    @app.route('/venues', methods=['POST'])
+    def post_venue():
 
+        try:
+            venue_data = request.get_json()
+
+            name = venue_data.get('name')
+            address = venue_data.get('address')
+            city = venue_data.get('city')
+            zipcode = venue_data.get('zipcode')
+            venue_image = venue_data.get('image')
+            description = venue_data.get('description')
+            is_available = venue_data.get('is_available')
+
+            venue = Venue(
+                name = name,
+                address = address,
+                city = city,
+                zipcode = zipcode,
+                is_available = is_available,
+                image = venue_image,
+                description = description
+            )
+
+            venue.insert()
+
+
+            return jsonify({
+                'success': True,
+                'venue': venue.format()
+            })
+        except:
+            abort(404)
 
     @app.route('/events' , methods=['POST'])
     def post_event():
 
         try:
             event_data = request.get_json()
-            print(event_data)
+
             team_id_one = event_data.get('team_one_id')
             team_id_two =  event_data.get('team_two_id')
             venue_id = event_data.get('venue_id')
@@ -328,7 +396,7 @@ def create_app(text_config=None):
 
             return jsonify({
                 'success': True,
-                'player': player.format()
+                'updated_player': player.format()
             }), 200
 
         except:
@@ -352,7 +420,31 @@ def create_app(text_config=None):
 
             return jsonify({
                 'success': True,
-                'team': team.format()
+                'updated_team': team.format()
+            }), 200
+        except:
+            abort(422)
+
+    
+    @app.route('/venues/<int:venue_id>', methods=['PATCH'])
+    def patch_venue(venue_id):
+
+        try:
+            venue = Venue.query.get(venue_id)
+            venue_data  = request.get_json()
+
+            venue.name = venue_data.get('name') or venue.name
+            venue.address = venue_data.get('address') or venue.address
+            venue.city = venue_data.get('city') or venue.city
+            venue.zipcode = venue_data.get('zipcode') or venue.zipcode
+            venue.is_available = venue_data.get('is_available') or venue.is_available
+            venue.image = venue_data.get('image') or venue.image
+
+            venue.update()
+
+            return jsonify({
+                'success': True,
+                'updated_venue': venue.format()
             }), 200
         except:
             abort(422)
@@ -377,13 +469,61 @@ def create_app(text_config=None):
 
             return jsonify({
                 'success': True,
-                'event': formatted_event[0]
-            })
+                'updated_event': formatted_event[0]
+            }), 200
         
         except:
             abort(422)
-    # Error Handling
 
+    # DELETE Endpoint Group
+
+
+
+    @app.route('/players/<int:player_id>' , methods={'DELETE'})
+    def delete_player(player_id):
+
+        try:
+            player = Player.query.get(player_id)
+
+            player.delete()
+
+            return jsonify({
+                'success': True,
+                'deleted_player': player.format()
+            }), 200
+        except:
+            abort(422)
+
+    @app.route('/teams/<int:team_id>', methods=['DELETE'])
+    def delete_team(team_id):
+
+        try:
+            team = Team.query.get(team_id)
+
+            team.delete()
+
+            return jsonify({
+                'success': True,
+                'deleted_team': team.format()
+            }), 200
+        except:
+            abort(422)
+
+    @app.route('/venues/<int:venue_id>', methods=['DELETE'])
+    def delete_venue(venue_id):
+
+        try:
+            venue = Venue.query.get(venue_id)
+
+            venue.delete()
+
+            return jsonify({
+                'success': True,
+                'deleted_venue': venue.format()
+            }), 200
+        except:
+            abort(422)
+        # Error Handling
 
     @app.errorhandler(400)
     def invalid_syntax(error):

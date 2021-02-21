@@ -49,6 +49,7 @@ class Team(db.Model):
     def format(self):
 
         return {
+            "id": self.id,
             "name": self.name,
             "logo": self.logo,
             "wins": self.wins,
@@ -184,6 +185,7 @@ class Player(db.Model):
     def format(self):
 
         return {
+            "id": self.id,
             "first_name": self.first_name,
             "last_name": self.last_name,
             "team": self.team,
