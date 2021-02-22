@@ -113,9 +113,9 @@ class Events(db.Model):
     team_one_score = db.Column(db.Integer(), nullable=True, default=0)
     team_two_score = db.Column(db.Integer(), nullable=True, default=0)
 
-    team_id = db.Column(db.Integer(), db.ForeignKey('teams.id'))
-    team_id_two = db.Column(db.Integer(), db.ForeignKey('teams.id'))
-    venue_id = db.Column(db.Integer(), db.ForeignKey('venues.id'))
+    team_id = db.Column(db.Integer(), db.ForeignKey('teams.id'), nullable=False)
+    team_id_two = db.Column(db.Integer(), db.ForeignKey('teams.id'), nullable=False)
+    venue_id = db.Column(db.Integer(), db.ForeignKey('venues.id'), nullable=False)
 
     team = db.relationship(Team, backref=db.backref('events', cascade='all,delete'), foreign_keys=[team_id])
     team_two = db.relationship(Team, backref=db.backref('team_events', cascade='all,delete'), foreign_keys=[team_id_two])

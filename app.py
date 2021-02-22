@@ -1,8 +1,7 @@
 from threading import Event
-from sqlalchemy.sql.expression import asc, desc, null
 from models import setup_db, Venue, Team, Events, Player
 from flask import json, jsonify, request
-from auth import requires_auth
+from auth import requires_auth, AuthError
 from flask import Flask, abort
 from sqlalchemy import or_
 from flask_cors import CORS
@@ -242,7 +241,8 @@ def create_app(text_config=None):
     # POST Endpoints Group
 
     @app.route('/players', methods=['POST'])
-    def post_player():
+    @requires_auth('post:players')
+    def post_player(jwt):
 
         try:
             player_data = request.get_json()
@@ -278,7 +278,8 @@ def create_app(text_config=None):
             abort(400)
         
     @app.route('/teams', methods=['POST'])
-    def post_team():
+    @requires_auth('post:teams')
+    def post_team(jwt):
         try:
             team_data = request.get_json()
 
@@ -306,7 +307,8 @@ def create_app(text_config=None):
             abort(400)
 
     @app.route('/venues', methods=['POST'])
-    def post_venue():
+    @requires_auth('post:venues')
+    def post_venue(jwt):
 
         try:
             venue_data = request.get_json()
@@ -340,7 +342,8 @@ def create_app(text_config=None):
             abort(404)
 
     @app.route('/events' , methods=['POST'])
-    def post_event():
+    @requires_auth('post:events')
+    def post_event(jwt):
 
         try:
             event_data = request.get_json()
@@ -377,7 +380,8 @@ def create_app(text_config=None):
     # PATH Endpoints Group
 
     @app.route('/players/<int:player_id>', methods=['PATCH'])
-    def patch_player(player_id):
+    @requires_auth('patch:players')
+    def patch_player(jwt, player_id):
 
         try:
             player = Player.query.get(player_id)
@@ -404,7 +408,8 @@ def create_app(text_config=None):
 
     
     @app.route('/teams/<int:team_id>', methods=['PATCH'])
-    def patch_team(team_id):
+    @requires_auth('patch:teams')
+    def patch_team(jwt, team_id):
 
         try: 
             team = Team.query.get(team_id)
@@ -427,7 +432,8 @@ def create_app(text_config=None):
 
     
     @app.route('/venues/<int:venue_id>', methods=['PATCH'])
-    def patch_venue(venue_id):
+    @requires_auth('patch:venues')
+    def patch_venue(jwt, venue_id):
 
         try:
             venue = Venue.query.get(venue_id)
@@ -451,7 +457,8 @@ def create_app(text_config=None):
 
 
     @app.route('/events/<int:event_id>' , methods=['PATCH'])
-    def patch_events(event_id):
+    @requires_auth('patch:events')
+    def patch_events(jwt, event_id):
 
         try:
             event = Events.query.get(event_id)
@@ -480,7 +487,8 @@ def create_app(text_config=None):
 
 
     @app.route('/players/<int:player_id>' , methods={'DELETE'})
-    def delete_player(player_id):
+    @requires_auth('delete:players')
+    def delete_player(jwt, player_id):
 
         try:
             player = Player.query.get(player_id)
@@ -495,7 +503,8 @@ def create_app(text_config=None):
             abort(422)
 
     @app.route('/teams/<int:team_id>', methods=['DELETE'])
-    def delete_team(team_id):
+    @requires_auth('delete:teams')
+    def delete_team(jwt, team_id):
 
         try:
             team = Team.query.get(team_id)
@@ -510,7 +519,8 @@ def create_app(text_config=None):
             abort(422)
 
     @app.route('/venues/<int:venue_id>', methods=['DELETE'])
-    def delete_venue(venue_id):
+    @requires_auth('delete:venues')
+    def delete_venue(jwt, venue_id):
 
         try:
             venue = Venue.query.get(venue_id)
@@ -523,6 +533,7 @@ def create_app(text_config=None):
             }), 200
         except:
             abort(422)
+        
         # Error Handling
 
     @app.errorhandler(400)
@@ -571,5 +582,14 @@ def create_app(text_config=None):
             'error': error.code,
             'message': 'Internal Error'
         }), error.code
+
+    @app.errorhandler(AuthError)
+    def auth_error(error):
+
+        return jsonify({
+            'success': False,
+            'error': error.status_code,
+            'message': error.error
+        }), error.status_code
 
     return app

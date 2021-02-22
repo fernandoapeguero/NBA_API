@@ -7,7 +7,7 @@ from urllib.request import urlopen
 
 AUTH0_DOMAIN = 'auth0-fsnd.us.auth0.com'
 ALGORITHMS = ['RS256']
-API_AUDIENCE = 'coffeeshop'
+API_AUDIENCE = 'nba_data_api'
 
 # AuthError Exception
 '''
@@ -124,4 +124,4 @@ def requires_auth(permission=''):
             return f(payload, *args, **kwargs)
 
         return wrapper
-    return 
+    return requires_auth_decorator
