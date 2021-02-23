@@ -6,17 +6,21 @@ from sqlalchemy.orm import backref
 
 
 database_name = "nba"
-database_path = "postgresql://{}@{}/{}".format('postgres:2225' ,'localhost:5432', database_name)
+database_path = "postgresql://{}@{}/{}".format(
+    'postgres:2225', 'localhost:5432', database_name)
 
 db = SQLAlchemy()
+
 
 def setup_db(app, database_path=database_path):
     app.config['SQLALCHEMY_DATABASE_URI'] = database_path
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
     db.init_app(app)
-    # uncomment if not using flask migration 
+    # uncomment if not using flask migration
     # db.create_all()
+
+
 class Team(db.Model):
     __tablename__ = 'teams'
 
@@ -27,8 +31,8 @@ class Team(db.Model):
     losses = db.Column(db.String(10), default=0)
     home_state = db.Column(db.String(), nullable=False)
 
-    def __init__(self, name, logo, wins, losses,home_state):
-        
+    def __init__(self, name, logo, wins, losses, home_state):
+
         self.name = name
         self.logo = logo
         self.wins = wins
@@ -54,8 +58,9 @@ class Team(db.Model):
             "logo": self.logo,
             "wins": self.wins,
             "losses": self.losses,
-            "home_state": self.home_state 
+            "home_state": self.home_state
         }
+
 
 class Venue(db.Model):
     __tablename__ = 'venues'
@@ -72,13 +77,12 @@ class Venue(db.Model):
     def __init__(self, name, image, address, city, zipcode, description, is_available):
         self.name = name
         self.image = image
-        self.address = address 
-        self.city = city 
-        self.zipcode = zipcode 
+        self.address = address
+        self.city = city
+        self.zipcode = zipcode
         self.description = description
         self.is_available = is_available
 
-    
     def insert(self):
         db.session.add(self)
         db.session.commit()
@@ -106,31 +110,35 @@ class Venue(db.Model):
 
 class Events(db.Model):
     __tablename__ = 'events'
-    
+
     id = db.Column(db.Integer, primary_key=True)
     start_time = db.Column(db.DateTime())
 
     team_one_score = db.Column(db.Integer(), nullable=True, default=0)
     team_two_score = db.Column(db.Integer(), nullable=True, default=0)
 
-    team_id = db.Column(db.Integer(), db.ForeignKey('teams.id'), nullable=False)
-    team_id_two = db.Column(db.Integer(), db.ForeignKey('teams.id'), nullable=False)
-    venue_id = db.Column(db.Integer(), db.ForeignKey('venues.id'), nullable=False)
+    team_id = db.Column(db.Integer(), db.ForeignKey(
+        'teams.id'), nullable=False)
+    team_id_two = db.Column(
+        db.Integer(), db.ForeignKey('teams.id'), nullable=False)
+    venue_id = db.Column(db.Integer(), db.ForeignKey(
+        'venues.id'), nullable=False)
 
-    team = db.relationship(Team, backref=db.backref('events', cascade='all,delete'), foreign_keys=[team_id])
-    team_two = db.relationship(Team, backref=db.backref('team_events', cascade='all,delete'), foreign_keys=[team_id_two])
-    venue = db.relationship(Venue, backref=db.backref('events', cascade='all,delete'))
-    
+    team = db.relationship(Team, backref=db.backref(
+        'events', cascade='all,delete'), foreign_keys=[team_id])
+    team_two = db.relationship(Team, backref=db.backref(
+        'team_events', cascade='all,delete'), foreign_keys=[team_id_two])
+    venue = db.relationship(Venue, backref=db.backref(
+        'events', cascade='all,delete'))
 
-    def __init__(self, team_id, team_id_two, venue_id, start_time, team_one_score = 0, team_two_score = 0):
-        
+    def __init__(self, team_id, team_id_two, venue_id, start_time, team_one_score=0, team_two_score=0):
+
         self.team_id = team_id
         self.team_id_two = team_id_two
         self.venue_id = venue_id
         self.start_time = start_time
         self.team_one_score = team_one_score
         self.team_two_score = team_two_score
-
 
     def insert(self):
         db.session.add(self)
@@ -142,6 +150,8 @@ class Events(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
+
+
 class Player(db.Model):
 
     __tablename__ = 'players'
@@ -156,7 +166,7 @@ class Player(db.Model):
     ppg = db.Column(db.Float())
     # Rebound per game
     rpg = db.Column(db.Float())
-    #assistance per game 
+    # assistance per game
     apg = db.Column(db.Float())
 
     team_id = db.Column(db.Integer(), db.ForeignKey('teams.id'))
@@ -165,7 +175,7 @@ class Player(db.Model):
         self.first_name = first_name
         self.last_name = last_name
         self.team = team
-        self.mpg = mpg 
+        self.mpg = mpg
         self.ppg = ppg
         self.rpg = rpg
         self.apg = apg
@@ -194,4 +204,3 @@ class Player(db.Model):
             "rebounds_per_game": self.rpg,
             "assistance_per_game": self.apg
         }
-
