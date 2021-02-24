@@ -154,7 +154,6 @@ def create_app(text_config=None):
     @app.route('/venues')
     def get_venues():
 
-
         try:
 
             search_term = request.args.get('search_term')
@@ -531,6 +530,23 @@ def create_app(text_config=None):
                 'success': True,
                 'deleted_venue': venue.format()
             }), 200
+        except:
+            abort(422)
+
+    @app.route('/events/<int:event_id>', methods=['DELETE'])
+    @requires_auth('delete:events')
+    def delete_event(jwt, event_id):
+        try:
+            event = Events.query.get(event_id)
+
+            formatted_event = paginated_events(request, [event])
+
+            event.delete()
+            
+            return jsonify({
+                'success': True,
+                'event': formatted_event[0]
+            })
         except:
             abort(422)
         
