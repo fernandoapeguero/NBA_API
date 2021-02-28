@@ -58,20 +58,6 @@ def create_app(text_config=None):
 
         return paginated_events
 
-
-    @app.route('/')
-    def index():
-
-        return f"Teams Api Home endpoint"
-
-    # update, Put, Delete, Post require Authentication 
-    # get does not 
-
-    # write api to get teams on the api does not require authentificaton 
-    # return a list of teams 10 per page you can change page number by adding page number to query 
-    # include a query parameter to paginated the pafes as well page size
-
-
     # GET Endpoints group 
 
     @app.route('/players')
