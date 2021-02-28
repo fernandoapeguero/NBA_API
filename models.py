@@ -4,11 +4,9 @@ from sqlalchemy.orm import backref
 import os 
 
 
-database_name = "nba"
-
-# database_url = os.environ['DATABASE_URL']
+# database_name = "nba"
 # "postgresql://{}@{}/{}".format('postgres:2225' ,'localhost:5432', database_name)
-database_path = 'postgres://bzkgzxkrcgxtgc:1273eb937717153d1c0566c7f6708ade11a3d2025dd420011b1fa696eadb3089@ec2-34-203-255-149.compute-1.amazonaws.com:5432/d3tbq5i3uonmlu'
+database_path = dos.environ['DATABASE_URL']
 db = SQLAlchemy()
 
 def setup_db(app, database_path=database_path):
@@ -17,7 +15,7 @@ def setup_db(app, database_path=database_path):
     db.app = app
     db.init_app(app)
     # uncomment if not using flask migration 
-    # db.create_all()
+    db.create_all()
 class Team(db.Model):
     __tablename__ = 'teams'
 
