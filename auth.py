@@ -74,6 +74,7 @@ def check_permissions(permission, payload):
 
     return True
 
+
 def verify_decode_jwt(token):
     jsonurl = urlopen("https://"+AUTH0_DOMAIN+"/.well-known/jwks.json")
     jwks = json.loads(jsonurl.read())
@@ -100,19 +101,20 @@ def verify_decode_jwt(token):
             return payload
         except jwt.ExpiredSignatureError:
             raise AuthError({"code": "token_expired",
-                            "description": "token is expired"}, 401)
+                             "description": "token is expired"}, 401)
         except jwt.JWTClaimsError:
             raise AuthError({"code": "invalid_claims",
-                            "description":
-                                "incorrect claims,"
-                                "please check the audience and issuer"}, 401)
+                             "description":
+                             "incorrect claims,"
+                             "please check the audience and issuer"}, 401)
         except Exception:
             raise AuthError({"code": "invalid_header",
-                            "description":
-                                "Unable to parse authentication"
-                                " token."}, 401)
+                             "description":
+                             "Unable to parse authentication"
+                             " token."}, 401)
     raise AuthError({"code": "invalid_header",
-                    "description": "Unable to find appropriate key"}, 401)
+                     "description": "Unable to find appropriate key"}, 401)
+
 
 def requires_auth(permission=''):
     def requires_auth_decorator(f):
