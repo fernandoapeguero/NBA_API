@@ -15,7 +15,7 @@ def setup_db(app, database_path=database_path):
     db.app = app
     db.init_app(app)
     # uncomment if not using flask migration 
-    db.create_all()
+    # db.create_all()
 class Team(db.Model):
     __tablename__ = 'teams'
 
