@@ -1,10 +1,14 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import backref
+import os 
 
 
 database_name = "nba"
-database_path = "postgresql://{}@{}/{}".format('postgres:2225' ,'localhost:5432', database_name)
+
+database_url = os.environ['DATABASE_URL']
+# "postgresql://{}@{}/{}".format('postgres:2225' ,'localhost:5432', database_name)
+database_path = database_url
 db = SQLAlchemy()
 
 def setup_db(app, database_path=database_path):
