@@ -1,4 +1,3 @@
-from threading import Event
 from models import setup_db, Venue, Team, Events, Player
 from flask import json, jsonify, request
 from auth import requires_auth, AuthError
@@ -94,7 +93,7 @@ def create_app(text_config=None):
             return jsonify({
                 'success': True,
                 'players': players,
-                'number_of_players': len(players)
+                'total_players': len(players)
             }), 200
         except:
             abort(404)
@@ -132,7 +131,7 @@ def create_app(text_config=None):
             return jsonify({
                 'success': True,
                 'teams': teams,
-                'number_of_teams': len(teams)
+                'total_teams': len(teams)
             }), 200
 
         except:
@@ -144,10 +143,10 @@ def create_app(text_config=None):
         try:
             team = Team.query.get(team_id)
 
-            return {
+            return jsonify({
                 'success': True,
                 'team': team.format()
-            }
+            }), 200
         except:
             abort(404)
 
@@ -167,11 +166,11 @@ def create_app(text_config=None):
 
             formatted_venues = paginate(request, venues)
 
-            return {
+            return jsonify({
                 'success': True,
                 'venues': formatted_venues,
                 'total_venues': len(venues)
-            }
+            }), 200
         except:
             abort(404)
 
@@ -184,7 +183,7 @@ def create_app(text_config=None):
             return jsonify({
                 'success': True,
                 'venue': venue.format()
-            })
+            }), 200
         except:
             abort(404)
 
@@ -203,7 +202,7 @@ def create_app(text_config=None):
                 'success': True,
                 'events': events,
                 'total_events': len(event_list)
-            })
+            }), 200
         except:
             abort(404)
 
@@ -336,7 +335,7 @@ def create_app(text_config=None):
             return jsonify({
                 'success': True,
                 'venue': venue.format()
-            })
+            }), 200
         except:
             abort(404)
 
@@ -546,7 +545,7 @@ def create_app(text_config=None):
             return jsonify({
                 'success': True,
                 'event': formatted_event[0]
-            })
+            }), 200
         except:
             abort(422)
         
