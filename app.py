@@ -5,7 +5,6 @@ from flask import Flask, abort
 from sqlalchemy import or_
 from flask_cors import CORS
 
-
 def create_app(text_config=None):
     app = Flask(__name__)
     setup_db(app)
