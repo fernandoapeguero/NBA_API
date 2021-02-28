@@ -6,7 +6,7 @@ import os
 
 # database_name = "nba"
 # "postgresql://{}@{}/{}".format('postgres:2225' ,'localhost:5432', database_name)
-database_path = dos.environ['DATABASE_URL']
+database_path = os.environ['DATABASE_URL']
 db = SQLAlchemy()
 
 def setup_db(app, database_path=database_path):
