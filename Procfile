@@ -1,1 +1,1 @@
-web: export FLASK_APP=api.py && export FLASK_ENV=development && python app.py
+web: export FLASK_APP=api.py && export FLASK_ENV=development && python api.py
