@@ -3,12 +3,12 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import backref
 import os 
 
-database_path = os.environ['DATABASE_URL']
+# database_path = os.environ['DATABASE_URL']
 
 db = SQLAlchemy()
+database_local_url = 'postgresql://postgres:2225@localhost:5432/nba'
 
-
-def setup_db(app, database_path=database_path):
+def setup_db(app, database_path=database_local_url):
     app.config['SQLALCHEMY_DATABASE_URI'] = database_path
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
@@ -25,15 +25,15 @@ class Team(db.Model):
     logo = db.Column(db.String(500))
     wins = db.Column(db.String(10), default=0)
     losses = db.Column(db.String(10), default=0)
-    home_state = db.Column(db.String(), nullable=False)
+    home_city = db.Column(db.String(), nullable=False)
 
-    def __init__(self, name, logo, wins, losses, home_state):
+    def __init__(self, name, logo, wins, losses, home_city):
 
         self.name = name
         self.logo = logo
         self.wins = wins
         self.losses = losses
-        self.home_state = home_state
+        self.home_state = home_city
 
     def insert(self):
         db.session.add(self)
@@ -54,7 +54,7 @@ class Team(db.Model):
             "logo": self.logo,
             "wins": self.wins,
             "losses": self.losses,
-            "home_state": self.home_state
+            "home_city": self.home_city
         }
 
 
@@ -121,11 +121,11 @@ class Events(db.Model):
         'venues.id'), nullable=False)
 
     team = db.relationship(Team, backref=db.backref(
-        'events', cascade='all,delete'), foreign_keys=[team_id])
+        'events', cascade='all, delete'), foreign_keys=[team_id])
     team_two = db.relationship(Team, backref=db.backref(
-        'team_events', cascade='all,delete'), foreign_keys=[team_id_two])
+        'events', cascade='all, delete'), foreign_keys=[team_id_two])
     venue = db.relationship(Venue, backref=db.backref(
-        'events', cascade='all,delete'))
+        'events', cascade='all, delete'))
 
     def __init__(self, team_id, team_id_two, venue_id, start_time, team_one_score=0, team_two_score=0):
 

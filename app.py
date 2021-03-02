@@ -265,14 +265,14 @@ def create_app(text_config=None):
             team_data = request.get_json()
 
             name = team_data.get('name')
-            home_state = team_data.get('home_state')
+            home_city = team_data.get('home_city')
             losses = team_data.get('losses') or 0
             wins = team_data.get('wins') or 0
             logo = team_data.get('logo') or ''
 
             team = Team(
                 name=name,
-                home_state=home_state,
+                home_city=home_city,
                 losses=losses,
                 wins=wins,
                 logo=logo
@@ -395,7 +395,7 @@ def create_app(text_config=None):
             team_data = request.get_json()
 
             team.name = team_data.get('name') or team.name
-            team.home_state = team_data.get('home_state') or team.home_state
+            team.home_city = team_data.get('home_city') or team.home_city
             team.losses = team_data.get('losses') or team.losses
             team.wins = team_data.get('wins') or team.wins
             team.logo = team_data.get('logo') or team.logo
