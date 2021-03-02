@@ -5,6 +5,7 @@ from flask import Flask, abort
 from sqlalchemy import or_
 from flask_cors import CORS
 
+
 def create_app(text_config=None):
     app = Flask(__name__)
     setup_db(app)
@@ -22,7 +23,7 @@ def create_app(text_config=None):
     PAGINATiON_COUNT = 10
 
     def paginate(request, selection):
-
+    
         page = request.args.get('page', 1, type=int)
         start = (page - 1) * PAGINATiON_COUNT
         end = start + PAGINATiON_COUNT
@@ -41,23 +42,24 @@ def create_app(text_config=None):
         events = []
 
         for event_data in event_list:
-            team = Team.query.get(event_data.team_id)
-            team_two = Team.query.get(event_data.team_id_two)
-            venue = Venue.query.get(event_data.venue_id)
+                    team = Team.query.get(event_data.team_id)
+                    team_two = Team.query.get(event_data.team_id_two)
+                    venue = Venue.query.get(event_data.venue_id)
 
-            events.append({
-                'id': event_data.id,
-                'venue': venue.name,
-                'team_one': team.name,
-                'team_two': team_two.name,
-                'start_time': event_data.start_time,
-            })
+                    events.append({
+                        'id': event_data.id,
+                        'venue': venue.name,
+                        'team_one': team.name,
+                        'team_two': team_two.name,
+                        'start_time': event_data.start_time,
+                    })
 
         paginated_events = events[start:end]
 
         return paginated_events
 
     # GET Endpoints group 
+
     @app.route('/players')
     def get_players():
 
@@ -65,34 +67,34 @@ def create_app(text_config=None):
             players = []
 
             search_term = request.args.get('search_term')
-            players_list = []
+            players_list = ''
             if search_term:
-                players_list = Player.query.filter(or_(Player.first_name.ilike(
-                    f'%{search_term}%'), Player.last_name.ilike(f'%{search_term}%'))).order_by('id').all()
-            else:
+                players_list = Player.query.filter(or_(Player.first_name.ilike(f'%{search_term}%'),Player.last_name.ilike(f'%{search_term}%'))).order_by('id').all()
+            else: 
                 players_list = Player.query.order_by('id').all()
 
             if players_list:
                 players = paginate(request, players_list)
-
+            
             return jsonify({
                 'success': True,
                 'players': players,
-                'total_players': len(players_list)
+                'total_players': len(players)
             }), 200
         except:
             abort(404)
+        
 
     @app.route('/players/<int:player_id>')
     def get_players_by_id(player_id):
 
         try:
-
+            
             player = Player.query.get(player_id)
-
+            
             return jsonify({
-                'success': True,
-                'players': player.format()
+                    'success': True,
+                    'players': player.format()
             }), 200
         except:
             abort(404)
@@ -103,10 +105,9 @@ def create_app(text_config=None):
         teams = []
         try:
             search_term = request.args.get('search_term')
-            team_list = []
+            team_list = None
             if search_term:
-                team_list = Team.query.filter(Team.name.ilike(
-                    f'%{search_term}%')).order_by('id').all()
+                team_list = Team.query.filter(Team.name.ilike(f'%{search_term}%')).order_by('id').all()
             else:
                 team_list = Team.query.order_by('id').all()
 
@@ -116,7 +117,7 @@ def create_app(text_config=None):
             return jsonify({
                 'success': True,
                 'teams': teams,
-                'total_teams': len(team_list)
+                'total_teams': len(teams)
             }), 200
 
         except:
@@ -124,7 +125,7 @@ def create_app(text_config=None):
 
     @app.route('/teams/<int:team_id>')
     def get_team_by_id(team_id):
-
+        
         try:
             team = Team.query.get(team_id)
 
@@ -142,12 +143,12 @@ def create_app(text_config=None):
 
             search_term = request.args.get('search_term')
 
-            venues = []
+            venues = None
             if search_term:
-                venues = Venue.query.filter(Venue.name.ilike(
-                    f'%{search_term}%')).order_by('id').all()
+                venues = Venue.query.filter(Venue.name.ilike(f'%{search_term}%')).order_by('id').all()
             else:
                 venues = Venue.query.order_by('id').all()
+
 
             formatted_venues = paginate(request, venues)
 
@@ -176,7 +177,7 @@ def create_app(text_config=None):
     def get_events():
 
         try:
-            events = []
+            events =  []
 
             event_list = Events.query.order_by('id').all()
 
@@ -191,11 +192,12 @@ def create_app(text_config=None):
         except:
             abort(404)
 
+
     @app.route('/events/<int:event_id>')
     def get_events_by_id(event_id):
 
         try:
-            event = []
+            event = None
 
             event_data = Events.query.get(event_id)
 
@@ -218,6 +220,7 @@ def create_app(text_config=None):
             }), 200
         except:
             abort(404)
+
 
     # POST Endpoints Group
 
@@ -247,7 +250,7 @@ def create_app(text_config=None):
                 apg=apg,
                 team_id=team_id
             )
-
+            
             player.insert()
 
             return jsonify({
@@ -257,7 +260,7 @@ def create_app(text_config=None):
 
         except:
             abort(400)
-
+        
     @app.route('/teams', methods=['POST'])
     @requires_auth('post:teams')
     def post_team(jwt):
@@ -271,11 +274,11 @@ def create_app(text_config=None):
             logo = team_data.get('logo') or ''
 
             team = Team(
-                name=name,
-                home_city=home_city,
-                losses=losses,
-                wins=wins,
-                logo=logo
+                name = name,
+                home_city = home_city,
+                losses = losses,
+                wins = wins,
+                logo = logo
             )
 
             team.insert()
@@ -303,16 +306,17 @@ def create_app(text_config=None):
             is_available = venue_data.get('is_available')
 
             venue = Venue(
-                name=name,
-                address=address,
-                city=city,
-                zipcode=zipcode,
-                is_available=is_available,
-                image=venue_image,
-                description=description
+                name = name,
+                address = address,
+                city = city,
+                zipcode = zipcode,
+                is_available = is_available,
+                image = venue_image,
+                description = description
             )
 
             venue.insert()
+
 
             return jsonify({
                 'success': True,
@@ -321,7 +325,7 @@ def create_app(text_config=None):
         except:
             abort(404)
 
-    @app.route('/events', methods=['POST'])
+    @app.route('/events' , methods=['POST'])
     @requires_auth('post:events')
     def post_event(jwt):
 
@@ -329,23 +333,24 @@ def create_app(text_config=None):
             event_data = request.get_json()
 
             team_id_one = event_data.get('team_one_id')
-            team_id_two = event_data.get('team_two_id')
+            team_id_two =  event_data.get('team_two_id')
             venue_id = event_data.get('venue_id')
             start_time = event_data.get('start_time')
             team_one_score = event_data.get('team_one_score') or 0
             team_two_score = event_data.get('team_one_score') or 0
 
+
             event = Events(
-                team_id=team_id_one,
-                team_id_two=team_id_two,
-                venue_id=venue_id,
-                start_time=start_time,
-                team_one_score=team_one_score,
-                team_two_score=team_two_score
+                team_id = team_id_one,
+                team_id_two = team_id_two,
+                venue_id = venue_id,
+                start_time = start_time,
+                team_one_score = team_one_score,
+                team_two_score = team_two_score
             )
 
             event.insert()
-
+            
             formatted_event = paginated_events(request, [event])
 
             return jsonify({
@@ -366,8 +371,7 @@ def create_app(text_config=None):
             player = Player.query.get(player_id)
             player_data = request.get_json()
 
-            player.first_name = player_data.get(
-                'first_name') or player.first_name
+            player.first_name = player_data.get('first_name') or player.first_name
             player.last_name = player_data.get('last_name') or player.last_name
             player.team = player_data.get('team') or player.team
             player.mpg = player_data.get('mpg') or player.mpg
@@ -375,7 +379,7 @@ def create_app(text_config=None):
             player.rpg = player_data.get('rpg') or player.rpg
             player.apg = player_data.get('apg') or player.apg
             player.team_id = player_data.get('team_id') or player.team_id
-
+            
             player.update()
 
             return jsonify({
@@ -386,11 +390,12 @@ def create_app(text_config=None):
         except:
             abort(422)
 
+    
     @app.route('/teams/<int:team_id>', methods=['PATCH'])
     @requires_auth('patch:teams')
     def patch_team(jwt, team_id):
 
-        try:
+        try: 
             team = Team.query.get(team_id)
             team_data = request.get_json()
 
@@ -409,20 +414,20 @@ def create_app(text_config=None):
         except:
             abort(422)
 
+    
     @app.route('/venues/<int:venue_id>', methods=['PATCH'])
     @requires_auth('patch:venues')
     def patch_venue(jwt, venue_id):
 
         try:
             venue = Venue.query.get(venue_id)
-            venue_data = request.get_json()
+            venue_data  = request.get_json()
 
             venue.name = venue_data.get('name') or venue.name
             venue.address = venue_data.get('address') or venue.address
             venue.city = venue_data.get('city') or venue.city
             venue.zipcode = venue_data.get('zipcode') or venue.zipcode
-            venue.is_available = venue_data.get(
-                'is_available') or venue.is_available
+            venue.is_available = venue_data.get('is_available') or venue.is_available
             venue.image = venue_data.get('image') or venue.image
 
             venue.update()
@@ -434,7 +439,8 @@ def create_app(text_config=None):
         except:
             abort(422)
 
-    @app.route('/events/<int:event_id>', methods=['PATCH'])
+
+    @app.route('/events/<int:event_id>' , methods=['PATCH'])
     @requires_auth('patch:events')
     def patch_events(jwt, event_id):
 
@@ -443,13 +449,10 @@ def create_app(text_config=None):
             event_data = request.get_json()
 
             event.team_id = event_data.get('team_one_id') or event.team_id
-            event.team_id_two = event_data.get(
-                'team_id_two') or event.team_id_two
+            event.team_id_two = event_data.get('team_id_two') or event.team_id_two
             event.venue_id = event_data.get('venue_id') or event.venue_id
-            event.team_one_score = event_data.get(
-                'team_one_score') or event.team_one_score
-            event.team_two_score = event_data.get(
-                'team_two_score') or event.team_two_score
+            event.team_one_score = event_data.get('team_one_score') or event.team_one_score
+            event.team_two_score = event_data.get('team_two_score') or event.team_two_score
 
             event.update()
 
@@ -459,13 +462,15 @@ def create_app(text_config=None):
                 'success': True,
                 'updated_event': formatted_event[0]
             }), 200
-
+        
         except:
             abort(422)
 
     # DELETE Endpoint Group
 
-    @app.route('/players/<int:player_id>', methods={'DELETE'})
+
+
+    @app.route('/players/<int:player_id>' , methods={'DELETE'})
     @requires_auth('delete:players')
     def delete_player(jwt, player_id):
 
@@ -541,6 +546,7 @@ def create_app(text_config=None):
             'message': 'Invalid syntax '
         }), error.code
 
+
     @app.errorhandler(404)
     def invalid_syntax(error):
 
@@ -567,6 +573,7 @@ def create_app(text_config=None):
             'error': error.code,
             'message': 'Unproccesable'
         }), error.code
+
 
     @app.errorhandler(500)
     def invalid_syntax(error):
