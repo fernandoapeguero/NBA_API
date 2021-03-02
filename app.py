@@ -79,7 +79,7 @@ def create_app(text_config=None):
             return jsonify({
                 'success': True,
                 'players': players,
-                'total_players': len(players)
+                'total_players': len(players_list)
             }), 200
         except:
             abort(404)
@@ -105,7 +105,7 @@ def create_app(text_config=None):
         teams = []
         try:
             search_term = request.args.get('search_term')
-            team_list = None
+            team_list = ''
             if search_term:
                 team_list = Team.query.filter(Team.name.ilike(f'%{search_term}%')).order_by('id').all()
             else:
@@ -117,7 +117,7 @@ def create_app(text_config=None):
             return jsonify({
                 'success': True,
                 'teams': teams,
-                'total_teams': len(teams)
+                'total_teams': len(team_list)
             }), 200
 
         except:
@@ -143,7 +143,7 @@ def create_app(text_config=None):
 
             search_term = request.args.get('search_term')
 
-            venues = None
+            venues = ''
             if search_term:
                 venues = Venue.query.filter(Venue.name.ilike(f'%{search_term}%')).order_by('id').all()
             else:
@@ -197,7 +197,7 @@ def create_app(text_config=None):
     def get_events_by_id(event_id):
 
         try:
-            event = None
+            event = ''
 
             event_data = Events.query.get(event_id)
 
