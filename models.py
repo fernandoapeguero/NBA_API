@@ -155,7 +155,7 @@ class Player(db.Model):
     #assistance per game 
     apg = db.Column(db.Float())
 
-    team_id = db.Column(db.Integer(), db.ForeignKey('teams.id'))
+    team_id = db.Column(db.Integer(), db.ForeignKey('teams.id'), default=0, nullable=True)
 
     def __init__(self, first_name, last_name, team, mpg, ppg, rpg, apg, team_id):
         self.first_name = first_name

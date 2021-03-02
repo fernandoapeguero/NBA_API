@@ -61,7 +61,7 @@ def create_app(text_config=None):
     @app.route('/')
     def index():
 
-        return  'Welcome to the NBA api public endpoints \n/players \n/teams \n/venues \nevents'
+        return  "<h2>Welcome to nba endpoint</h2> <ul><ul>"
 
     # GET Endpoints group 
 
