@@ -103,7 +103,7 @@ def create_app(text_config=None):
         teams = []
         try:
             search_term = request.args.get('search_term')
-            team_list = ''
+            team_list = None
             if search_term:
                 team_list = Team.query.filter(Team.name.ilike(
                     f'%{search_term}%')).order_by('id').all()
