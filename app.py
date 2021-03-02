@@ -58,6 +58,11 @@ def create_app(text_config=None):
 
         return paginated_events
 
+    @app.route('/')
+    def index():
+
+        return  'Welcome to the NBA api public endpoints \n/players \n/teams \n/venues \nevents'
+
     # GET Endpoints group 
 
     @app.route('/players')
