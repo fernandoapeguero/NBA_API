@@ -160,9 +160,10 @@ class Player(db.Model):
 
     team_id = db.Column(db.Integer(), db.ForeignKey('teams.id'), default=0, nullable=True)
 
-    def __init__(self, first_name, last_name, team, mpg, ppg, rpg, apg, team_id):
+    def __init__(self, first_name, last_name, player_number, team, mpg, ppg, rpg, apg, team_id):
         self.first_name = first_name
         self.last_name = last_name
+        self.player_number = player_number
         self.team = team
         self.mpg = mpg 
         self.ppg = ppg
@@ -187,6 +188,7 @@ class Player(db.Model):
             "id": self.id,
             "first_name": self.first_name,
             "last_name": self.last_name,
+            "player_number": self.player_number,
             "team": self.team,
             "minutes_per_game": self.mpg,
             "points_per_game": self.ppg,

@@ -61,7 +61,7 @@ def create_app(text_config=None):
     @app.route('/')
     def index():
 
-        return  "<h2>Welcome to nba endpoint</h2> <ul><ul>"
+        return  "<h2>Welcome to nba api</h2> "
 
     # GET Endpoints group 
 
@@ -238,6 +238,7 @@ def create_app(text_config=None):
 
             first_name = player_data.get('first_name')
             last_name = player_data.get('last_name')
+            player_number = player_data.get('player_number')
             team = player_data.get('team')
             mpg = player_data.get('mpg')
             ppg = player_data.get('ppg')
@@ -248,6 +249,7 @@ def create_app(text_config=None):
             player = Player(
                 first_name=first_name,
                 last_name=last_name,
+                player_number = player_number,
                 team=team,
                 mpg=mpg,
                 ppg=ppg,
@@ -378,6 +380,7 @@ def create_app(text_config=None):
 
             player.first_name = player_data.get('first_name') or player.first_name
             player.last_name = player_data.get('last_name') or player.last_name
+            player.player_number = player_data.get('player_number') or player.player_number
             player.team = player_data.get('team') or player.team
             player.mpg = player_data.get('mpg') or player.mpg
             player.ppg = player_data.get('ppg') or player.ppg
