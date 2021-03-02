@@ -5,6 +5,7 @@ from sqlalchemy.orm import backref
 import os 
 
 database_path =  os.environ['DATABASE_URL']
+
 db = SQLAlchemy()
 
 def setup_db(app, database_path=database_path):
