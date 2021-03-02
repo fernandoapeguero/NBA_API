@@ -32,7 +32,7 @@ class Team(db.Model):
         self.logo = logo
         self.wins = wins
         self.losses = losses
-        self.home_state = home_city
+        self.home_city = home_city
 
     def insert(self):
         db.session.add(self)
