@@ -3,11 +3,13 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import backref
 import os 
 
-database_path = os.environ['DATABASE_URL']
+# database_path = os.environ['DATABASE_URL']
 
 db = SQLAlchemy()
 
-def setup_db(app, database_path=database_path):
+database_local_url = 'postgresql://postgres:2225@localhost:5432/nba'
+
+def setup_db(app, database_path=database_local_url):
     app.config['SQLALCHEMY_DATABASE_URI'] = database_path
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app

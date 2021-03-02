@@ -4,10 +4,11 @@ from functools import wraps
 from jose import jwt
 from urllib.request import urlopen
 import os
-
-AUTH0_DOMAIN = os.environ['AUTH_DOMAIN']
+# os.environ['AUTH_DOMAIN']
+AUTH0_DOMAIN = 'auth0-fsnd.us.auth0.com'
 ALGORITHMS = ['RS256']
-API_AUDIENCE = os.environ['API_AUDIENCE']
+API_AUDIENCE = 'nba_data_api'
+# os.environ['API_AUDIENCE']
 
 # AuthError Exception
 '''
