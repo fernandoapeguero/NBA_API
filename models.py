@@ -1,3 +1,4 @@
+from enum import unique
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import backref
@@ -146,6 +147,7 @@ class Player(db.Model):
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     team = db.Column(db.String(50), nullable=False)
+    player_number = db.Column(db.Integer(), unique)
     # Minutes per game
     mpg = db.Column(db.Float())
     # Points per Game
