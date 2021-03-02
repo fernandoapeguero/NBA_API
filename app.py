@@ -195,7 +195,7 @@ def create_app(text_config=None):
     def get_events_by_id(event_id):
 
         try:
-            event = None
+            event = []
 
             event_data = Events.query.get(event_id)
 
