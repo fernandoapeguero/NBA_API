@@ -147,7 +147,7 @@ class Player(db.Model):
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     team = db.Column(db.String(50), nullable=False)
-    player_number = db.Column(db.Integer(), unique)
+    player_number = db.Column(db.Integer(), unique=True)
     # Minutes per game
     mpg = db.Column(db.Float())
     # Points per Game
