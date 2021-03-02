@@ -4,7 +4,7 @@ from sqlalchemy.orm import backref
 import os 
 
 
-database_name = "nba"
+database_name = "nba_rel"
 # "postgresql://{}@{}/{}".format('postgres:2225' ,'localhost:5432', database_name)
 database_path = "postgresql://{}@{}/{}".format('postgres:2225' ,'localhost:5432', database_name)
 db = SQLAlchemy()
@@ -112,9 +112,9 @@ class Events(db.Model):
     team_one_score = db.Column(db.Integer(), nullable=True, default=0)
     team_two_score = db.Column(db.Integer(), nullable=True, default=0)
 
-    team_id = db.Column(db.Integer(), db.ForeignKey('teams.id'), nullable=False)
-    team_id_two = db.Column(db.Integer(), db.ForeignKey('teams.id'), nullable=False)
-    venue_id = db.Column(db.Integer(), db.ForeignKey('venues.id'), nullable=False)
+    team_id = db.Column(db.Integer(), db.ForeignKey('teams.id', ondelete='cascade'), nullable=False)
+    team_id_two = db.Column(db.Integer(), db.ForeignKey('teams.id', ondelete='cascade'), nullable=False)
+    venue_id = db.Column(db.Integer(), db.ForeignKey('venues.id', ondelete='cascade'), nullable=False)
 
     team = db.relationship(Team, backref=db.backref('events', cascade='all,delete'), foreign_keys=[team_id])
     team_two = db.relationship(Team, backref=db.backref('team_events', cascade='all,delete'), foreign_keys=[team_id_two])
