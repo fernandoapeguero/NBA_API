@@ -65,7 +65,7 @@ def create_app(text_config=None):
             players = []
 
             search_term = request.args.get('search_term')
-            players_list = ''
+            players_list = []
             if search_term:
                 players_list = Player.query.filter(or_(Player.first_name.ilike(
                     f'%{search_term}%'), Player.last_name.ilike(f'%{search_term}%'))).order_by('id').all()
@@ -103,7 +103,7 @@ def create_app(text_config=None):
         teams = []
         try:
             search_term = request.args.get('search_term')
-            team_list = None
+            team_list = []
             if search_term:
                 team_list = Team.query.filter(Team.name.ilike(
                     f'%{search_term}%')).order_by('id').all()
@@ -142,7 +142,7 @@ def create_app(text_config=None):
 
             search_term = request.args.get('search_term')
 
-            venues = None
+            venues = []
             if search_term:
                 venues = Venue.query.filter(Venue.name.ilike(
                     f'%{search_term}%')).order_by('id').all()
