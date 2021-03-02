@@ -78,7 +78,7 @@ def create_app(text_config=None):
             return jsonify({
                 'success': True,
                 'players': players,
-                'total_players': len(players)
+                'total_players': len(players_list)
             }), 200
         except:
             abort(404)
@@ -116,7 +116,7 @@ def create_app(text_config=None):
             return jsonify({
                 'success': True,
                 'teams': teams,
-                'total_teams': len(teams)
+                'total_teams': len(team_list)
             }), 200
 
         except:
