@@ -253,7 +253,7 @@ def create_app(text_config=None):
 
         try:
             events = []
-            events_list = Events.query.filter(or_(Events.team_id == team_id, Events.team_id_two == team_id)).all()
+            events_list = Events.query.filter(Events.team_id == team_id).all()
 
             if events_list:
                 events = paginated_events(request, events)
