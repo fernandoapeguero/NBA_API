@@ -225,44 +225,49 @@ def create_app(text_config=None):
 
             event_data = Events.query.get(event_id)
 
-            if event_data:
-                team = Team.query.get(event_data.team_id)
-                team_two = Team.query.get(event_data.team_id_two)
-                venue = Venue.query.get(event_data.venue_id)
+            # if event_data:
+            #     team = Team.query.get(event_data.team_id)
+            #     team_two = Team.query.get(event_data.team_id_two)
+            #     venue = Venue.query.get(event_data.venue_id)
 
-                event = {
-                    'id': event_data.id,
-                    'venue': venue.name,
-                    'team_one': team.name,
-                    'team_two': team_two.name,
-                    'start_time': event_data.start_time,
-                }
+            #     event = {
+            #         'id': event_data.id,
+            #         'venue': venue.name,
+            #         'team_one': team.name,
+            #         'team_two': team_two.name,
+            #         'start_time': event_data.start_time,
+            #     }
+            if event_data:
+                event = paginated_events(request, [event_data])
 
             return jsonify({
                 'success': True,
-                'events': event
+                'events': event[0]
             }), 200
         except:
             abort(404)
 
 
-    # @app.route('events/<int:team_id>/teams')
-    # def get_events_by_team_id(team_id):
+    @app.route('events/<int:team_id>/teams')
+    def get_events_by_team_id(team_id):
 
-    #     try:
+        try:
+            events = []
+            events_list = Events.query.filter(or_(Events.team_id == team_id, Events.team_id_two == team_id)).all()
 
-    #         events = Events.query.filter(or_(Events.team_id == team_id, Events.team_id_two == team_id)).all()
+            if events_list:
+                events = paginated_events(request, events)
 
-    #         formatted_event = paginated_events(request, events)
+            return jsonify({
+                'success': True,
+                'events': events,
+                'total_events': len(events)
+            })
 
-    #         return jsonify({
-    #             'success': True,
-    #             'events': formatted_event,
-    #             'total_events': len(events)
-    #         })
+        except:
+            abort(404)
 
-    #     except:
-    #         abort(404)
+
     # POST Endpoints Group
 
     @app.route('/players', methods=['POST'])
