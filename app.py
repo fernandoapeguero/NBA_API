@@ -379,7 +379,7 @@ def create_app(text_config=None):
         try:
             event_data = request.get_json()
 
-            team_id_one = event_data.get('team_one_id')
+            team_id_one = event_data.get('team_id')
             team_id_two = event_data.get('team_two_id')
             venue_id = event_data.get('venue_id')
             start_time = event_data.get('start_time')
