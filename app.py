@@ -225,20 +225,20 @@ def create_app(text_config=None):
 
             event_data = Events.query.get(event_id)
 
-            # if event_data:
-            #     team = Team.query.get(event_data.team_id)
-            #     team_two = Team.query.get(event_data.team_id_two)
-            #     venue = Venue.query.get(event_data.venue_id)
-
-            #     event = {
-            #         'id': event_data.id,
-            #         'venue': venue.name,
-            #         'team_one': team.name,
-            #         'team_two': team_two.name,
-            #         'start_time': event_data.start_time,
-            #     }
             if event_data:
-                event = paginated_events(request, [event_data])
+                team = Team.query.get(event_data.team_id)
+                team_two = Team.query.get(event_data.team_id_two)
+                venue = Venue.query.get(event_data.venue_id)
+
+                event = {
+                    'id': event_data.id,
+                    'venue': venue.name,
+                    'team_one': team.name,
+                    'team_two': team_two.name,
+                    'start_time': event_data.start_time,
+                }
+            # if event_data:
+            #     event = paginated_events(request, [event_data])
 
             return jsonify({
                 'success': True,
