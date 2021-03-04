@@ -239,7 +239,22 @@ def create_app(text_config=None):
     def get_events_by_team(team_id):
 
 
-        return 'working for now'
+        try:
+            events = []
+
+            events_list = Events.query.filter(or_(Events.team_id == team_id, Events.team_id_two == team_id)).all()
+
+            if events_list:
+                events = paginated_events(request, events_list)
+
+            return jsonify({
+                'success': True,
+                'events': events,
+                'total_events': len(events_list)
+            }), 200
+            
+        except:
+            abort(404)
 
     # POST Endpoints Group
 
