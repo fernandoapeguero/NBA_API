@@ -104,7 +104,7 @@ def create_app(text_config=None):
         except:
             abort(404)
 
-    @app.route('/players/<int:team_id/teams>')
+    @app.route('/players/<int:team_id>/teams')
     def get_players_by_team_id(team_id):
 
         try:
