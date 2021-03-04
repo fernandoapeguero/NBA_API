@@ -4,7 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import backref
 import os
 
-database_path = os.environ['DATABASE_URL']
+# os.environ['DATABASE_URL']
+database_path =  "postgresql://postgres:2225@localhost:5432/nba_rel"
 
 db = SQLAlchemy()
 
@@ -157,7 +158,7 @@ class Player(db.Model):
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     team = db.Column(db.String(50), nullable=False)
-    player_number = db.Column(db.Integer(), unique=False)
+    player_number = db.Column(db.Integer())
     # Minutes per game
     mpg = db.Column(db.Float())
     # Points per Game
