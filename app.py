@@ -109,7 +109,7 @@ def create_app(text_config=None):
 
         try:
             players = []
-            players_list = Player.query.filter(Player.id == team_id).all()
+            players_list = Player.query.filter(Player.team_id == team_id).all()
 
             if players_list:
                 players = paginate(request, players_list)
