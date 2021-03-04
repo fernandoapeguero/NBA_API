@@ -368,7 +368,7 @@ def create_app(text_config=None):
             event_data = request.get_json()
 
             team_id = event_data.get('team_id')
-            team_id_two = event_data.get('team_two_id')
+            team_id_two = event_data.get('team_id_two')
             venue_id = event_data.get('venue_id')
             start_time = event_data.get('start_time')
             team_one_score = event_data.get('team_one_score') or 0
