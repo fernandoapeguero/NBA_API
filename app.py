@@ -253,16 +253,16 @@ def create_app(text_config=None):
 
         try:
             events = []
-            events_list = Events.query.filter(Events.team_id == team_id).all()
-
-            if events_list:
-                events = paginated_events(request, events)
+            events_list = []
+            # Events.query.filter(Events.team_id == team_id).all()
+            # if events_list:
+            #     events = paginated_events(request, events)
 
             return jsonify({
                 'success': True,
                 'events': events,
-                'total_events': len(events)
-            })
+                'total_events': len(events_list)
+            }), 200
 
         except:
             abort(404)
