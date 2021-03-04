@@ -248,24 +248,24 @@ def create_app(text_config=None):
             abort(404)
 
 
-    # @app.route('events/<int:team_id>/teams')
-    # def get_events_by_team_id(team_id):
+    @app.route('events/<int:team_id>/teams')
+    def get_events_by_team_id(team_id):
 
-    #     try:
-    #         events = []
-    #         events_list = []
-    #         # Events.query.filter(Events.team_id == team_id).all()
-    #         # if events_list:
-    #         #     events = paginated_events(request, events)
+        try:
+            events = []
+            events_list = []
+            # Events.query.filter(Events.team_id == team_id).all()
+            # if events_list:
+            #     events = paginated_events(request, events)
 
-    #         return jsonify({
-    #             'success': True,
-    #             'events': events,
-    #             'total_events': len(events_list)
-    #         }), 200
+            return jsonify({
+                'success': True,
+                'events': events,
+                'total_events': len(events_list)
+            }), 200
 
-    #     except:
-    #         abort(404)
+        except:
+            abort(404)
 
 
     # POST Endpoints Group
@@ -379,7 +379,7 @@ def create_app(text_config=None):
         try:
             event_data = request.get_json()
 
-            team_id_one = event_data.get('team_id')
+            team_id = event_data.get('team_id')
             team_id_two = event_data.get('team_two_id')
             venue_id = event_data.get('venue_id')
             start_time = event_data.get('start_time')
@@ -387,7 +387,7 @@ def create_app(text_config=None):
             team_two_score = event_data.get('team_one_score') or 0
 
             event = Events(
-                team_id=team_id_one,
+                team_id=team_id,
                 team_id_two=team_id_two,
                 venue_id=venue_id,
                 start_time=start_time,
@@ -397,11 +397,11 @@ def create_app(text_config=None):
 
             event.insert()
 
-            formatted_event = paginated_events(request, [event])
-
+            # formatted_event = paginated_events(request, [event])
+            # formatted_event[0]
             return jsonify({
                 'success': True,
-                'event': formatted_event[0]
+                'event': []
             }), 200
 
         except:
