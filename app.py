@@ -235,26 +235,11 @@ def create_app(text_config=None):
         except:
             abort(404)
 
+    @app.route('/events/<int:team_id>/teams')
+    def get_events_by_team(team_id):
 
-    # @app.route('events/<int:team_id>/teams')
-    # def get_events_by_team_id(team_id):
 
-    #     try:
-    #         events = []
-    #         events_list = []
-    #         # Events.query.filter(Events.team_id == team_id).all()
-    #         # if events_list:
-    #         #     events = paginated_events(request, events)
-
-    #         return jsonify({
-    #             'success': True,
-    #             'events': events,
-    #             'total_events': len(events_list)
-    #         }), 200
-
-    #     except:
-    #         abort(404)
-
+        return 'working for now'
 
     # POST Endpoints Group
 
