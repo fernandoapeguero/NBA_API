@@ -128,7 +128,7 @@ class Events(db.Model):
     venue = db.relationship(Venue, backref=db.backref(
         'events', cascade='all,delete'))
 
-    def __init__(self, team_id, team_id_two, venue_id, start_time, team_one_score=0, team_two_score=0):
+    def __init__(self, team_id, team_id_two, venue_id, start_time, team_one_score = 0, team_two_score = 0):
 
         self.team_id = team_id
         self.team_id_two = team_id_two

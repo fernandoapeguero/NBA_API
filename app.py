@@ -397,11 +397,11 @@ def create_app(text_config=None):
 
             event.insert()
 
-            # formatted_event = paginated_events(request, [event])
-            # formatted_event[0]
+            formatted_event = paginated_events(request, [event])
+            
             return jsonify({
                 'success': True,
-                'event': []
+                'event': formatted_event[0]
             }), 200
 
         except:
