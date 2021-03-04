@@ -4,8 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import backref
 import os
 
-# os.environ['DATABASE_URL']
-database_path =  "postgresql://postgres:2225@localhost:5432/nba_rel"
+database_path = os.environ['DATABASE_URL']
 
 db = SQLAlchemy()
 
