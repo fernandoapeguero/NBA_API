@@ -245,6 +245,24 @@ def create_app(text_config=None):
         except:
             abort(404)
 
+
+    @app.route('events/<int:team_id>/teams')
+    def get_events_by_team_id(team_id):
+
+        try:
+
+            events = Events.query.filter(or_(Events.team_id == team_id, Events.team_id_two == team_id)).all()
+
+            formatted_event = paginated_events(request, events)
+
+            return jsonify({
+                'success': True,
+                'events': formatted_event,
+                'total_events': len(events)
+            })
+
+        except:
+            abort(404)
     # POST Endpoints Group
 
     @app.route('/players', methods=['POST'])
