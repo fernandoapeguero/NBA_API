@@ -66,26 +66,6 @@ class TriviaTestCase(unittest.TestCase):
         self.assertTrue(len(data['events']))
         self.assertGreater(data['total_events'], 0)
 
-    # def test_post_player(self):
-
-    #     players = {
-    #         "first_name": "kobe",
-    #         "last_name": "brian",
-    #         "team": "lakers",
-    #         "mpg": 42,
-    #         "ppg": 28,
-    #         "rpg": 6.2,
-    #         "apg": 4.2,
-    #         "team_id": 2
-    #     }
-
-    #     self.client.credentials(Authorization='Bearer {}'.format(team_manage_token))
-    #     res = self.client().post('/players', json=players)
-
-    #     data = json.loads(res.data)
-    #     print(data)
-    #     self.assertEqual(res.status_code , 200)
-
 
 if __name__ == "__main__":
     unittest.main()
