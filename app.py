@@ -238,11 +238,11 @@ def create_app(text_config=None):
     @app.route('/events/<int:team_id>/teams')
     def get_events_by_team(team_id):
 
-
         try:
             events = []
 
-            events_list = Events.query.filter(or_(Events.team_id == team_id, Events.team_id_two == team_id)).order_by('id').all()
+            events_list = Events.query.filter(or_(
+                Events.team_id == team_id, Events.team_id_two == team_id)).order_by('id').all()
 
             if events_list:
                 events = paginated_events(request, events_list)
@@ -386,7 +386,7 @@ def create_app(text_config=None):
             event.insert()
 
             formatted_event = paginated_events(request, [event])
-            
+
             return jsonify({
                 'success': True,
                 'event': formatted_event[0]
