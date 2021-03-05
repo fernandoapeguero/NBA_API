@@ -79,4 +79,124 @@ Setting the `FLASK_ENV` variable to `development` will detect file changes and r
 
 Setting the `FLASK_APP` variable to `flaskr` directs flask to use the `flaskr` directory and the `__init__.py` file to find the application. 
 
+## Base Url 
+
+the base url returns a list of all the question in the api and the categories in the trivia. Pagination is integrated into the api each page will get 10 questions each.
+
+    https://udacity-nba-api.herokuapp.com/
+
+the base url just return welcom to nba api.
+  
+ ## Error Handling 
+ 
+ Type of error the api handles
+
+   * 400 Bad Request
+   * 404 Not Found
+   * 405 Method Not Allowed
+   * 422 Unproccesable Entity
+   * 500 Server Error 
+   
+Error Handling Response 
+
+```bash
+{
+  'success': False,
+  'error':  400,
+  'message': 'Bad request'
+}
+
+```
+
+responses with come back in a json object format 
+
+<br>
+
+# Endpoint Library 
+
+Here you will find all the endpoint you need to work with the api 
+
+The Structure of the EndPoint library is simple since you will deploy the backend localy for this app we know the domain will be https://udacity-nba-api.herokuapp.com/
+and you will only need the path for example /players in this library we will prefix the path with the method needed for the call. 
+
+### Pagination 
+
+The project paginates the result in pages of 10 objects by passing what page you what in the query example: https://udacity-nba-api.herokuapp.com/players?page=2 will return the second page of the players results 
+
+* Pagination amount change in future release of the project so you can pass how many results per page you will need.
+
+<br>
+
+## GET Endpoints 
+
+### GET/players
+
+return all players in the database paginated in pages of 10.
+
+Response
+
+```bash
+  {
+   "players":[
+      {
+         "assistance_per_game":1.3,
+         "first_name":"Reggie",
+         "id":1,
+         "last_name":"Bullock",
+         "minutes_per_game":26.2,
+         "player_number":25,
+         "points_per_game":8.6,
+         "rebounds_per_game":3.5,
+         "team":"Knicks"
+      },
+      {
+         "assistance_per_game":2.9,
+         "first_name":"Rj",
+         "id":2,
+         "last_name":"Barrett",
+         "minutes_per_game":33.4,
+         "player_number":9,
+         "points_per_game":16.5,
+         "rebounds_per_game":6.1,
+         "team":"Knicks"
+      },
+      ...
+   ],
+   "success":true,
+   "total_players":16
+}
+```
+
+<br>
+
+### GET/Player?search_term=cu
+
+return all the player in the daatabse where first or last name matches the search term.
+
+Response
+
+```bash
+{
+  "players": [
+    {
+      "assistance_per_game": 3.7,
+      "first_name": "Seth",
+      "id": 10,
+      "last_name": "Curry",
+      "minutes_per_game": 25,
+      "player_number": 11,
+      "points_per_game": 15.4,
+      "rebounds_per_game": 1.9,
+      "team": "76ers"
+    }
+  ],
+  "success": true,
+  "total_players": 1
+}
+```
+
+
+
+
+
 
