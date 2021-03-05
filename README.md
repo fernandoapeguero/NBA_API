@@ -79,7 +79,7 @@ Setting the `FLASK_ENV` variable to `development` will detect file changes and r
 
 Setting the `FLASK_APP` variable to `flaskr` directs flask to use the `flaskr` directory and the `__init__.py` file to find the application. 
 
-## Base Url 
+## Base URL
 
 the base url returns a list of all the question in the api and the categories in the trivia. Pagination is integrated into the api each page will get 10 questions each.
 
@@ -169,9 +169,9 @@ Response Sample:
 
 <br>
 
-### GET/Player?search_term=cu
+### GET/players?search_term=cu
 
-return all the player in the daatabse where first or last name matches the search term.
+return all the player in the databse where first or last name matches the search term.
 
 Response Sample:
 
@@ -195,9 +195,11 @@ Response Sample:
 }
 ```
 
-### GET/players/<Player ID>
+<br>
+
+### GET/players/Player_ID
     
-return a player base on the id provided in the uri.
+return a player base on the id provided in the url.
 
 Response Sample:
 
@@ -218,8 +220,9 @@ Response Sample:
 }
 ```
 
+<br>
 
-### GET/players/<Team ID>/teams
+### GET/players/Team_ID/teams
     
 return all the player of the specify team.
 
@@ -278,4 +281,239 @@ Response Sample:
   "total_players": 6
 }
 ```
+
+<br>
+
+### GET/teams
+
+return all teams in the api paginated in pages of 10 results.
+
+Respose Sample:
+
+```bash
+{
+  "success": true,
+  "teams": [
+    {
+      "home_city": "New york",
+      "id": 1,
+      "logo": "https://www.nba.com/.element/img/1.0/teamsites/logos/teamlogos_500x500/bos.png",
+      "losses": "0",
+      "name": "Knicks",
+      "wins": "0"
+    },
+    {
+      "home_city": "Philadelphia",
+      "id": 9,
+      "logo": "https://www.nba.com/.element/img/1.0/teamsites/logos/teamlogos_500x500/bos.png",
+      "losses": "0",
+      "name": "76ers",
+      "wins": "0"
+    },
+    {
+      "home_city": "Houston",
+      "id": 10,
+      "logo": "https://www.nba.com/.element/img/1.0/teamsites/logos/teamlogos_500x500/hou.png",
+      "losses": "0",
+      "name": "Rockets",
+      "wins": "0"
+    },
+    ...
+  ],
+  "total_teams": 32
+}
+```
+
+<br>
+
+### GET/teams/TEAM_ID
+
+return specific team if found.
+
+Response Sample:
+
+```bash
+{
+  "success": true,
+  "team": {
+    "home_city": "Phoenix",
+    "id": 16,
+    "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/a/a2/San_Antonio_Spurs.svg/1200px-San_Antonio_Spurs.svg.png",
+    "losses": "0",
+    "name": "Suns",
+    "wins": "0"
+  }
+}
+```
+
+<br>
+
+### GET /venues
+
+return all venues in the database paginated in pages of 10 results.
+
+Response Sample
+
+```bash
+{
+  "success": true,
+  "total_venues": 4,
+  "venues": [
+    {
+      "id": 1,
+      "venue_address": "2121 Biscayne Blvd, Miami",
+      "venue_city": "florida",
+      "venue_description": "At AmericanAirlines Arena, it is our mission to deliver exceptional guest service, by surpassing each guest’s highest level of expectation.",
+      "venue_image": "https://www.aaarena.com/assets/img/Arena-Night-Interior-Slide-be90c5bf85.jpg",
+      "venue_is_available": false,
+      "venue_name": "America Arena",
+      "venue_zipcode": "33137"
+    },
+    {
+      "id": 2,
+      "venue_address": "1111 S Figueroa St",
+      "venue_city": "los angeles",
+      "venue_description": "Staples Center is a multi-purpose arena in Downtown Los Angeles. Adjacent to the L.A. Live development, it is located next to the Los Angeles Convention Center complex along Figueroa Street. The arena opened on October 17, 1999.",
+      "venue_image": "https://www.aaarena.com/assets/img/Arena-Night-Interior-Slide-be90c5bf85.jpg",
+      "venue_is_available": false,
+      "venue_name": "STAPLES Center",
+      "venue_zipcode": "33137"
+    },
+    {
+      "id": 3,
+      "venue_address": "1 Warriors Way",
+      "venue_city": "San Francisco",
+      "venue_description": "Chase Center is an indoor arena in the Mission Bay neighborhood of San Francisco, California. The building is the home venue for the Golden State Warriors of the National Basketball Association and occasionally for San Francisco Dons men's basketball.",
+      "venue_image": "https://www.aaarena.com/assets/img/Arena-Night-Interior-Slide-be90c5bf85.jpg",
+      "venue_is_available": true,
+      "venue_name": "Chase Center",
+      "venue_zipcode": "94158"
+    },
+    {
+      "id": 7,
+      "venue_address": "2121 Biscayne Blvd, Miami",
+      "venue_city": "florida",
+      "venue_description": "At AmericanAirlines Arena, it is our mission to deliver exceptional guest service, by surpassing each guest’s highest level of expectation.",
+      "venue_image": "https://www.aaarena.com/assets/img/Arena-Night-Interior-Slide-be90c5bf85.jpg",
+      "venue_is_available": false,
+      "venue_name": "AmericanAirlines Arena",
+      "venue_zipcode": "33137"
+    }
+  ]
+}
+```
+
+<br>
+
+### GET/venue/Venue_ID
+
+return venue base on id.
+
+Response Sample
+
+```bash
+{
+  "success": true,
+  "venue": {
+    "id": 1,
+    "venue_address": "2121 Biscayne Blvd, Miami",
+    "venue_city": "florida",
+    "venue_description": "At AmericanAirlines Arena, it is our mission to deliver exceptional guest service, by surpassing each guest’s highest level of expectation.",
+    "venue_image": "https://www.aaarena.com/assets/img/Arena-Night-Interior-Slide-be90c5bf85.jpg",
+    "venue_is_available": false,
+    "venue_name": "America Arena",
+    "venue_zipcode": "33137"
+  }
+}
+```
+
+<br>
+
+### GET/events
+
+return all events in the api paginated in pages of 10 results.
+
+Response Sample
+
+```bash
+{
+  "events": [
+    {
+      "id": 1,
+      "start_time": "Sat, 18 Dec 2021 20:00:00 GMT",
+      "team_one": "Rockets",
+      "team_two": "Hornets",
+      "venue": "America Arena"
+    },
+    {
+      "id": 4,
+      "start_time": "Sun, 12 Sep 2021 20:30:00 GMT",
+      "team_one": "Hawks",
+      "team_two": "Suns",
+      "venue": "America Arena"
+    },
+    ...
+  ],
+  "success": true,
+  "total_events": 6
+}
+```
+
+<br>
+
+### GET/events/Event_ID
+
+return event base on id provided.
+
+Response Sample
+
+```bash
+{
+  "events": {
+    "id": 1,
+    "start_time": "Sat, 18 Dec 2021 20:00:00 GMT",
+    "team_one": "Rockets",
+    "team_two": "Hornets",
+    "venue": "America Arena"
+  },
+  "success": true
+}
+```
+
+<br>
+
+### GET/events/Team_id/teams
+
+Return all the event a team have.
+
+Response Sample 
+
+```bash
+{
+  "events": [
+    {
+      "id": 1,
+      "start_time": "Sat, 18 Dec 2021 20:00:00 GMT",
+      "team_one": "Rockets",
+      "team_two": "Hornets",
+      "venue": "America Arena"
+    },
+    {
+      "id": 7,
+      "start_time": "Mon, 30 Aug 2021 20:30:00 GMT",
+      "team_one": "Magic",
+      "team_two": "Rockets",
+      "venue": "America Arena"
+    }
+  ],
+  "success": true,
+  "total_events": 2
+}
+```
+
+<br>
+
+## POST Endpoints
+
+
 
