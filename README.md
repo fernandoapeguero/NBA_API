@@ -108,7 +108,7 @@ Error Handling Response
 
 ```
 
-responses with come back in a json object format 
+responses with come back in a json object every error response follow the same format.
 
 <br>
 
@@ -133,7 +133,7 @@ The project paginates the result in pages of 10 objects by passing what page you
 
 return all players in the database paginated in pages of 10.
 
-Response
+Response Sample:
 
 ```bash
   {
@@ -173,7 +173,7 @@ Response
 
 return all the player in the daatabse where first or last name matches the search term.
 
-Response
+Response Sample:
 
 ```bash
 {
@@ -195,8 +195,87 @@ Response
 }
 ```
 
+### GET/players/<Player ID>
+    
+return a player base on the id provided in the uri.
+
+Response Sample:
+
+```bash 
+{
+  "players": {
+    "assistance_per_game": 3,
+    "first_name": "Shake",
+    "id": 14,
+    "last_name": "Milton",
+    "minutes_per_game": 32,
+    "player_number": 18,
+    "points_per_game": 23.2,
+    "rebounds_per_game": 12.3,
+    "team": "76ers"
+  },
+  "success": true
+}
+```
 
 
+### GET/players/<Team ID>/teams
+    
+return all the player of the specify team.
 
+Response Sample:
 
+```bash
+{
+  "players": [
+    {
+      "assistance_per_game": 1.3,
+      "first_name": "Reggie",
+      "id": 1,
+      "last_name": "Bullock",
+      "minutes_per_game": 26.2,
+      "player_number": 25,
+      "points_per_game": 8.6,
+      "rebounds_per_game": 3.5,
+      "team": "Knicks"
+    },
+    {
+      "assistance_per_game": 2.9,
+      "first_name": "Rj",
+      "id": 2,
+      "last_name": "Barrett",
+      "minutes_per_game": 33.4,
+      "player_number": 9,
+      "points_per_game": 16.5,
+      "rebounds_per_game": 6.1,
+      "team": "Knicks"
+    },
+    {
+      "assistance_per_game": 3.7,
+      "first_name": "ELfrid",
+      "id": 3,
+      "last_name": "Payton",
+      "minutes_per_game": 28,
+      "player_number": 6,
+      "points_per_game": 12.4,
+      "rebounds_per_game": 3.7,
+      "team": "Knicks"
+    },
+    {
+      "assistance_per_game": 5.5,
+      "first_name": "Julius",
+      "id": 4,
+      "last_name": "Randle",
+      "minutes_per_game": 36.7,
+      "player_number": 6,
+      "points_per_game": 23.4,
+      "rebounds_per_game": 10.9,
+      "team": "Knicks"
+    },
+    ...
+  ],
+  "success": true,
+  "total_players": 6
+}
+```
 
