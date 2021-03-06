@@ -19,7 +19,7 @@ We recommend working within a virtual environment whenever using Python for proj
 
 #### PIP Dependencies
 
-Once you have your virtual environment setup and running, install dependencies by naviging to the `/backend` directory and running:
+Once you have your virtual environment setup and running, install dependencies in the directory:
 
 ```bash
 pip install -r requirements.txt
@@ -515,9 +515,13 @@ Response Sample
 
 ## POST Endpoints
 
+### POST/players
+
+Role: Team Management, Nba comission
+
 Post a player to the api Auth Require.
 
-Json Object Structure spected by the endpoint Sample
+Json Object Structure expected by the endpoint Sample
 
 ```bash 
     {
@@ -535,11 +539,10 @@ Json Object Structure spected by the endpoint Sample
 
 Response Sample 
 
-The endpoint will return the player that was posted in the response.
-
 ```bash 
     "success": true,
     {
+    	"id": 18,
 	"first_name": "Derrick",
 	"last_name": "Rose",
         "player_number": 4,
@@ -552,5 +555,328 @@ The endpoint will return the player that was posted in the response.
 }
 ```
 
+<br>
+
+### POST/teams
+
+Role: Nba comission
+
+Post a team to the api Auth Require.
 
 
+Json Object Structure expected by the endpoint Sample
+
+```bash
+{
+    "name": "Timberwolves",
+    "home_city": "Minnesota",
+    "losses": 0,
+    "wins": 0,
+    "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/c/c2/Minnesota_Timberwolves_logo.svg/1200px-Minnesota_Timberwolves_logo.svg.png"
+}
+```
+
+Response Sample
+
+```bash
+"success": true,
+{
+    "id": 4, 
+    "name": "Timberwolves",
+    "home_city": "Minnesota",
+    "losses": 0,
+    "wins": 0,
+    "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/c/c2/Minnesota_Timberwolves_logo.svg/1200px-Minnesota_Timberwolves_logo.svg.png"
+}
+```
+
+<br>
+
+### POST/venues
+
+Role Require: Venue Management
+
+Post a venue to the api Auth Require
+
+Json Object Structure expected by the endpoint Sample
+
+```bash 
+{
+    "name": "AmericanAirlines Arena",
+    "address": "2121 Biscayne Blvd, Miami",
+    "city": "florida",
+    "zipcode": "33137",
+    "is_available": false,
+    "image": "https://www.aaarena.com/assets/img/Arena-Night-Interior-Slide-be90c5bf85.jpg",
+    "description": "At AmericanAirlines Arena, it is our mission to deliver exceptional guest service, by surpassing each guest’s highest level of expectation."
+}
+```
+
+Response Sample
+
+```bash
+"success": true,
+{
+    "id": 15,
+    "name": "AmericanAirlines Arena",
+    "address": "2121 Biscayne Blvd, Miami",
+    "city": "florida",
+    "zipcode": "33137",
+    "is_available": false,
+    "image": "https://www.aaarena.com/assets/img/Arena-Night-Interior-Slide-be90c5bf85.jpg",
+    "description": "At AmericanAirlines Arena, it is our mission to deliver exceptional guest service, by surpassing each guest’s highest level of expectation."
+}
+```
+
+<br>
+
+### POST/events
+
+Role Require: venue Management
+
+Post a event to the api Auth Require.
+
+```bash
+{
+    "team_id": 23,
+    "team_id_two": 26,
+    "venue_id":  2,
+    "start_time": "2021-12-18 20:00:00"
+}
+```
+
+Response Sample
+
+```bash
+"success": true,
+{
+  "id": 42,
+  "venue": "Madison Square Garden",
+  "team_one": "knicks",
+  "Team_Two": "Spurs",
+  "Start_time": "2021-12-18 20:00:00"
+}
+```
+
+<br>
+
+## PATCH Endpoints
+
+### PATCH/players/PLAYER_ID
+
+Role Require: Team Management, Nba comission
+
+Updates a player information in the api
+
+Sample Json Structure.
+
+
+```bash
+{
+    "first_name": "Joel"
+}
+```
+
+Response Sample
+
+```bash 
+    "success": true,
+{
+    "id": 12,
+    "first_name": "Joel",
+    "last_name": "spenser",
+    "player_number": 4,
+    "team": "Knicks",
+    "mpg": 24.6,
+    "ppg": 12.5,
+    "rpg": 2.6,
+    "apg": 4.9,
+    "team_id": 1
+}
+```
+
+<br>
+
+### PATCH/teams/TEAM_ID
+
+Role Require: team Management, Nba Comission
+
+Updated a team information in the api.
+
+Json Structure Sample 
+
+```bash
+{
+    "name": "Timberwolves Grounders",
+
+}
+```
+
+Response Sample
+
+```bash
+"success": true,
+{
+    "id": 1,
+    "name": "Timberwolves Grounders",
+    "home_city": "Minnesota",
+    "losses": 0,
+    "wins": 0,
+    "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/c/c2/Minnesota_Timberwolves_logo.svg/1200px-Minnesota_Timberwolves_logo.svg.png"
+}
+```
+
+<br>
+
+### PATCH/venues/VENUE_ID
+
+Role Require: venue management
+
+Updated a venue information on the api 
+
+Json Structure Sample
+
+```bash 
+{
+    "name": "American Airlines Arena",
+    "is_available": true,
+   
+}
+```
+
+Response Sample
+
+```bash 
+"success": true,
+{
+    "name": "American Airlines Arena",
+    "address": "2121 Biscayne Blvd, Miami",
+    "city": "florida",
+    "zipcode": "33137",
+    "is_available": false,
+    "image": "https://www.aaarena.com/assets/img/Arena-Night-Interior-Slide-be90c5bf85.jpg",
+    "description": "At AmericanAirlines Arena, it is our mission to deliver exceptional guest service, by surpassing each guest’s highest level of expectation."
+}
+```
+
+<br>
+
+### PATCH/events/EVENT_ID
+
+Role Require: Venue Management
+
+Updated a venue information in the api.
+
+Json Sample Structure 
+
+```bash 
+{
+    "team_id": 14,
+    "venue_id": 8
+}
+```
+
+
+```bash
+"success": true,
+{
+  "id": 42,
+  "venue": "American Airlines arena",
+  "team_one": "Heat",
+  "Team_Two": "Spurs",
+  "Start_time": "2021-12-18 20:00:00"
+}
+```
+
+<br>
+
+## DELETE Endpoints
+
+### DELETE/players/PLAYER_ID
+
+Role Require: Team Manager, Nba comission
+
+Deletes a player from the api.
+
+the endpoint will return the deleted player in the response.
+
+```bash
+"success": true,
+{
+    "assistance_per_game":1.3,
+    "first_name":"Reggie",
+    "id":1,
+    "last_name":"Bullock",
+    "minutes_per_game":26.2,
+    "player_number":25,
+    "points_per_game":8.6,
+    "rebounds_per_game":3.5,
+    "team":"Knicks"
+}
+```
+
+### DELETE/teams/TEAM_ID
+
+Role Require: Nba Comission.
+
+Deletes a team from the api.
+
+the endpoint will return the deleted team in the response.
+
+```bash
+"success": true,
+{
+    "id": 1,
+    "name": "Timberwolves Grounders",
+    "home_city": "Minnesota",
+    "losses": 0,
+    "wins": 0,
+    "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/c/c2/Minnesota_Timberwolves_logo.svg/1200px-Minnesota_Timberwolves_logo.svg.png"
+}
+```
+
+<br>
+
+### DELETE/venues/VENUE_ID
+
+Role Require: Venue Management
+
+Deletes a venue from the api .
+
+The endpoint will return the deleted venue in the response.
+
+```bash
+"success":true,
+{
+    "name": "American Airlines Arena",
+    "address": "2121 Biscayne Blvd, Miami",
+    "city": "florida",
+    "zipcode": "33137",
+    "is_available": false,
+    "image": "https://www.aaarena.com/assets/img/Arena-Night-Interior-Slide-be90c5bf85.jpg",
+    "description": "At AmericanAirlines Arena, it is our mission to deliver exceptional guest service, by surpassing each guest’s highest level of expectation."
+}
+
+```
+
+<br>
+
+### DELETE/events/EVENT_ID
+
+Role Require: Venue Management
+
+Delete a Event From the api.
+
+The endpoint will return the deleted event in the response. 
+
+```bash
+"success": true,
+{
+  "id": 42,
+  "venue": "AMerican Airlines Arena",
+  "team_one": "Heats",
+  "Team_Two": "Spurs",
+  "Start_time": "2021-12-18 20:00:00"
+}
+
+```
