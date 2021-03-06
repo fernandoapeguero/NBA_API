@@ -515,5 +515,42 @@ Response Sample
 
 ## POST Endpoints
 
+Post a player to the api Auth Require.
+
+Json Object Structure spected by the endpoint Sample
+
+```bash 
+    {
+	"first_name": "Derrick",
+	"last_name": "Rose",
+        "player_number": 4,
+	"team": "Knicks",
+	"mpg": 24.6,
+	"ppg": 12.5,
+	"rpg": 2.6,
+	"apg": 4.9,
+	"team_id": 1
+}
+```
+
+Response Sample 
+
+The endpoint will return the player that was posted in the response.
+
+```bash 
+    "success": true,
+    {
+	"first_name": "Derrick",
+	"last_name": "Rose",
+        "player_number": 4,
+	"team": "Knicks",
+	"mpg": 24.6,
+	"ppg": 12.5,
+	"rpg": 2.6,
+	"apg": 4.9,
+	"team_id": 1
+}
+```
+
 
 
