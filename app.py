@@ -318,7 +318,6 @@ def create_app(text_config=None):
             )
 
             team.insert()
-            print('de verdad ')
             return jsonify({
                 'success': True,
                 'team': team.format()
