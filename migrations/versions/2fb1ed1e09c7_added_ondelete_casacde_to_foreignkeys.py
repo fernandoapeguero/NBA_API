@@ -21,9 +21,12 @@ def upgrade():
     op.drop_constraint('events_team_id_fkey', 'events', type_='foreignkey')
     op.drop_constraint('events_team_id_two_fkey', 'events', type_='foreignkey')
     op.drop_constraint('events_venue_id_fkey', 'events', type_='foreignkey')
-    op.create_foreign_key(None, 'events', 'teams', ['team_id_two'], ['id'], ondelete='cascade')
-    op.create_foreign_key(None, 'events', 'teams', ['team_id'], ['id'], ondelete='cascade')
-    op.create_foreign_key(None, 'events', 'venues', ['venue_id'], ['id'], ondelete='cascade')
+    op.create_foreign_key(None, 'events', 'teams', [
+                          'team_id_two'], ['id'], ondelete='cascade')
+    op.create_foreign_key(None, 'events', 'teams', [
+                          'team_id'], ['id'], ondelete='cascade')
+    op.create_foreign_key(None, 'events', 'venues', [
+                          'venue_id'], ['id'], ondelete='cascade')
     # ### end Alembic commands ###
 
 
@@ -32,7 +35,10 @@ def downgrade():
     op.drop_constraint(None, 'events', type_='foreignkey')
     op.drop_constraint(None, 'events', type_='foreignkey')
     op.drop_constraint(None, 'events', type_='foreignkey')
-    op.create_foreign_key('events_venue_id_fkey', 'events', 'venues', ['venue_id'], ['id'])
-    op.create_foreign_key('events_team_id_two_fkey', 'events', 'teams', ['team_id_two'], ['id'])
-    op.create_foreign_key('events_team_id_fkey', 'events', 'teams', ['team_id'], ['id'])
+    op.create_foreign_key('events_venue_id_fkey', 'events',
+                          'venues', ['venue_id'], ['id'])
+    op.create_foreign_key('events_team_id_two_fkey',
+                          'events', 'teams', ['team_id_two'], ['id'])
+    op.create_foreign_key('events_team_id_fkey', 'events',
+                          'teams', ['team_id'], ['id'])
     # ### end Alembic commands ###

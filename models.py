@@ -4,12 +4,12 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import backref
 import os
 
-database_path = os.environ['DATABASE_URL']
+database_path = os.environ.get('DATABASE_URL')
 
 db = SQLAlchemy()
 
 
-def setup_db(app, database_path=database_path):
+def setup_db(app, database_path=database_path, testing=None):
     app.config['SQLALCHEMY_DATABASE_URI'] = database_path
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
@@ -18,7 +18,23 @@ def setup_db(app, database_path=database_path):
     # db.create_all()
 
 
-class Team(db.Model):
+class base_class(db.Model):
+
+    __abstract__ = True
+
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+
+class Team(base_class):
     __tablename__ = 'teams'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -40,17 +56,6 @@ class Team(db.Model):
         self.losses = losses
         self.home_city = home_city
 
-    def insert(self):
-        db.session.add(self)
-        db.session.commit()
-
-    def update(self):
-        db.session.commit()
-
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
-
     def format(self):
 
         return {
@@ -63,7 +68,7 @@ class Team(db.Model):
         }
 
 
-class Venue(db.Model):
+class Venue(base_class):
     __tablename__ = 'venues'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -84,17 +89,6 @@ class Venue(db.Model):
         self.description = description
         self.is_available = is_available
 
-    def insert(self):
-        db.session.add(self)
-        db.session.commit()
-
-    def update(self):
-        db.session.commit()
-
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
-
     def format(self):
 
         return {
@@ -109,7 +103,7 @@ class Venue(db.Model):
         }
 
 
-class Events(db.Model):
+class Events(base_class):
     __tablename__ = 'events'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -132,8 +126,13 @@ class Events(db.Model):
     venue = db.relationship(Venue, backref=db.backref(
         'events', cascade='all,delete'))
 
+<<<<<<< HEAD
     def __init__(self, team_id, team_id_two, venue_id, start_time, team_one_score = 0, team_two_score = 0):
     
+=======
+    def __init__(self, team_id, team_id_two, venue_id, start_time, team_one_score=0, team_two_score=0):
+
+>>>>>>> 50bed878664703c9bf4e8035dd45f9e9df8692ed
         self.team_id = team_id
         self.team_id_two = team_id_two
         self.venue_id = venue_id
@@ -141,19 +140,8 @@ class Events(db.Model):
         self.team_one_score = team_one_score
         self.team_two_score = team_two_score
 
-    def insert(self):
-        db.session.add(self)
-        db.session.commit()
 
-    def update(self):
-        db.session.commit()
-
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
-
-
-class Player(db.Model):
+class Player(base_class):
 
     __tablename__ = 'players'
 
@@ -184,17 +172,6 @@ class Player(db.Model):
         self.rpg = rpg
         self.apg = apg
         self.team_id = team_id
-
-    def insert(self):
-        db.session.add(self)
-        db.session.commit()
-
-    def update(self):
-        db.session.commit()
-
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
 
     def format(self):
 

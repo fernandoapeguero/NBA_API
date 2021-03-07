@@ -4,10 +4,12 @@ from functools import wraps
 from jose import jwt
 from urllib.request import urlopen
 import os
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
 
-AUTH0_DOMAIN = os.environ['AUTH_DOMAIN']
-ALGORITHMS = ['RS256']
-API_AUDIENCE = os.environ['API_AUDIENCE']
+AUTH0_DOMAIN = os.environ.get('AUTH0_DOMAIN')
+ALGORITHMS = [os.environ.get('ALGORITHMS')]
+API_AUDIENCE = os.environ.get('API_AUDIENCE')
 
 # AuthError Exception
 '''
@@ -76,6 +78,7 @@ def check_permissions(permission, payload):
 
 
 def verify_decode_jwt(token):
+
     jsonurl = urlopen("https://"+AUTH0_DOMAIN+"/.well-known/jwks.json")
     jwks = json.loads(jsonurl.read())
     unverified_header = jwt.get_unverified_header(token)

@@ -1,16 +1,17 @@
+from werkzeug.exceptions import BadRequest
 from models import setup_db, Venue, Team, Events, Player
-from flask import json, jsonify, request
+from flask import json, jsonify, request, abort, Flask
 from auth import requires_auth, AuthError
-from flask import Flask, abort
 from sqlalchemy import or_
 from flask_cors import CORS
+import sys
 
 
 def create_app(text_config=None):
     app = Flask(__name__)
     setup_db(app)
 
-    cors = CORS(app, resources={r'/nba/*': {'origins': '*'}})
+    cors = CORS(app, resources={r'/nba/*': {'origins': 'udacity.com'}})
 
     @app.after_request
     def after_request(reponse):
@@ -20,13 +21,13 @@ def create_app(text_config=None):
                             'GET,PATCH ,POST, DELETE , OPTIONS')
         return reponse
 
-    PAGINATiON_COUNT = 10
+    PAGINATION_COUNT = 10
 
     def paginate(request, selection):
 
         page = request.args.get('page', 1, type=int)
-        start = (page - 1) * PAGINATiON_COUNT
-        end = start + PAGINATiON_COUNT
+        start = (page - 1) * PAGINATION_COUNT
+        end = start + PAGINATION_COUNT
 
         info = [information.format() for information in selection]
 
@@ -36,8 +37,8 @@ def create_app(text_config=None):
 
     def paginated_events(request, event_list):
         page = request.args.get('page', 1, type=int)
-        start = (page - 1) * PAGINATiON_COUNT
-        end = start + PAGINATiON_COUNT
+        start = (page - 1) * PAGINATION_COUNT
+        end = start + PAGINATION_COUNT
 
         events = []
 
@@ -87,7 +88,8 @@ def create_app(text_config=None):
                 'players': players,
                 'total_players': len(players_list)
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(404)
 
     @app.route('/players/<int:player_id>')
@@ -101,7 +103,8 @@ def create_app(text_config=None):
                 'success': True,
                 'players': player.format()
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(404)
 
     @app.route('/players/<int:team_id>/teams')
@@ -120,7 +123,8 @@ def create_app(text_config=None):
                 'total_players': len(players_list)
             })
 
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(404)
 
     @app.route('/teams')
@@ -145,7 +149,8 @@ def create_app(text_config=None):
                 'total_teams': len(team_list)
             }), 200
 
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(404)
 
     @app.route('/teams/<int:team_id>')
@@ -158,7 +163,8 @@ def create_app(text_config=None):
                 'success': True,
                 'team': team.format()
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(404)
 
     @app.route('/venues')
@@ -182,7 +188,8 @@ def create_app(text_config=None):
                 'venues': formatted_venues,
                 'total_venues': len(venues)
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(404)
 
     @app.route('/venues/<int:venue_id>')
@@ -195,7 +202,8 @@ def create_app(text_config=None):
                 'success': True,
                 'venue': venue.format()
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(404)
 
     @app.route('/events')
@@ -214,7 +222,8 @@ def create_app(text_config=None):
                 'events': events,
                 'total_events': len(event_list)
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(404)
 
     @app.route('/events/<int:event_id>')
@@ -230,19 +239,20 @@ def create_app(text_config=None):
 
             return jsonify({
                 'success': True,
-                'events': event[0]
+                'event': event[0]
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(404)
 
     @app.route('/events/<int:team_id>/teams')
     def get_events_by_team(team_id):
 
-
         try:
             events = []
 
-            events_list = Events.query.filter(or_(Events.team_id == team_id, Events.team_id_two == team_id)).order_by('id').all()
+            events_list = Events.query.filter(or_(
+                Events.team_id == team_id, Events.team_id_two == team_id)).order_by('id').all()
 
             if events_list:
                 events = paginated_events(request, events_list)
@@ -253,7 +263,8 @@ def create_app(text_config=None):
                 'total_events': len(events_list)
             }), 200
 
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(404)
 
     # POST Endpoints Group
@@ -294,7 +305,8 @@ def create_app(text_config=None):
                 'player': player.format()
             }), 200
 
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(400)
 
     @app.route('/teams', methods=['POST'])
@@ -318,12 +330,12 @@ def create_app(text_config=None):
             )
 
             team.insert()
-            print('de verdad ')
             return jsonify({
                 'success': True,
                 'team': team.format()
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(400)
 
     @app.route('/venues', methods=['POST'])
@@ -357,7 +369,8 @@ def create_app(text_config=None):
                 'success': True,
                 'venue': venue.format()
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(404)
 
     @app.route('/events', methods=['POST'])
@@ -386,13 +399,14 @@ def create_app(text_config=None):
             event.insert()
 
             formatted_event = paginated_events(request, [event])
-            
+
             return jsonify({
                 'success': True,
                 'event': formatted_event[0]
             }), 200
 
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(400)
 
     # PATH Endpoints Group
@@ -413,7 +427,7 @@ def create_app(text_config=None):
             player.team = player_data.get('team') or player.team
             player.mpg = player_data.get('mpg') or player.mpg
             player.ppg = player_data.get('ppg') or player.ppg
-            player.rpg = player_data.get('rpg') or player.rpg
+            player.rpg = player_data.get('rssssssdsspg') or player.rpg
             player.apg = player_data.get('apg') or player.apg
             player.team_id = player_data.get('team_id') or player.team_id
 
@@ -424,7 +438,8 @@ def create_app(text_config=None):
                 'updated_player': player.format()
             }), 200
 
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(422)
 
     @app.route('/teams/<int:team_id>', methods=['PATCH'])
@@ -447,7 +462,8 @@ def create_app(text_config=None):
                 'success': True,
                 'updated_team': team.format()
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(422)
 
     @app.route('/venues/<int:venue_id>', methods=['PATCH'])
@@ -472,7 +488,8 @@ def create_app(text_config=None):
                 'success': True,
                 'updated_venue': venue.format()
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(422)
 
     @app.route('/events/<int:event_id>', methods=['PATCH'])
@@ -501,7 +518,8 @@ def create_app(text_config=None):
                 'updated_event': formatted_event[0]
             }), 200
 
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(422)
 
     # DELETE Endpoint Group
@@ -519,7 +537,8 @@ def create_app(text_config=None):
                 'success': True,
                 'deleted_player': player.format()
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(422)
 
     @app.route('/teams/<int:team_id>', methods=['DELETE'])
@@ -535,7 +554,8 @@ def create_app(text_config=None):
                 'success': True,
                 'deleted_team': team.format()
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(422)
 
     @app.route('/venues/<int:venue_id>', methods=['DELETE'])
@@ -551,7 +571,8 @@ def create_app(text_config=None):
                 'success': True,
                 'deleted_venue': venue.format()
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(422)
 
     @app.route('/events/<int:event_id>', methods=['DELETE'])
@@ -566,9 +587,10 @@ def create_app(text_config=None):
 
             return jsonify({
                 'success': True,
-                'event': formatted_event[0]
+                'deleted_event': formatted_event[0]
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(422)
 
         # Error Handling
