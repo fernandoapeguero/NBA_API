@@ -6,7 +6,7 @@ from urllib.request import urlopen
 import os
 
 AUTH0_DOMAIN = os.environ.get('AUTH_DOMAIN')
-ALGORITHMS = os.environ.get('ALGORITHMS')
+ALGORITHMS = [os.environ.get('ALGORITHMS')]
 API_AUDIENCE = os.environ.get('API_AUDIENCE')
 
 # AuthError Exception

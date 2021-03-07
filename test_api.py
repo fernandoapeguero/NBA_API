@@ -17,7 +17,7 @@ class NbaTestCase(unittest.TestCase):
         self.database_name = "nba_test"
         self.database_path = "postgresql://{}@{}/{}".format(
             'postgres:2225', 'localhost:5432', self.database_name)
-        setup_db(self.app, self.database_path)
+        setup_db(self.app, self.database_path, True)
 
         # binds the app to the current context
         with self.app.app_context():
