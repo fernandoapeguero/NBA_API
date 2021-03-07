@@ -9,14 +9,13 @@ database_path = os.environ.get('DATABASE_URL')
 db = SQLAlchemy()
 
 
-def setup_db(app, database_path=database_path, testing = None):
+def setup_db(app, database_path=database_path, testing=None):
     app.config['SQLALCHEMY_DATABASE_URI'] = database_path
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.app = app
     db.init_app(app)
     # uncomment if not using flask migration
-    if testing:
-        db.create_all()
+    # db.create_all()
 
 
 class base_class(db.Model):

@@ -11,7 +11,7 @@ def create_app(text_config=None):
     app = Flask(__name__)
     setup_db(app)
 
-    cors = CORS(app, resources={r'/nba/*': {'origins': '*'}})
+    cors = CORS(app, resources={r'/nba/*': {'origins': 'udacity.com'}})
 
     @app.after_request
     def after_request(reponse):
@@ -21,13 +21,13 @@ def create_app(text_config=None):
                             'GET,PATCH ,POST, DELETE , OPTIONS')
         return reponse
 
-    PAGINATiON_COUNT = 10
+    PAGINATION_COUNT = 10
 
     def paginate(request, selection):
 
         page = request.args.get('page', 1, type=int)
-        start = (page - 1) * PAGINATiON_COUNT
-        end = start + PAGINATiON_COUNT
+        start = (page - 1) * PAGINATION_COUNT
+        end = start + PAGINATION_COUNT
 
         info = [information.format() for information in selection]
 
@@ -37,8 +37,8 @@ def create_app(text_config=None):
 
     def paginated_events(request, event_list):
         page = request.args.get('page', 1, type=int)
-        start = (page - 1) * PAGINATiON_COUNT
-        end = start + PAGINATiON_COUNT
+        start = (page - 1) * PAGINATION_COUNT
+        end = start + PAGINATION_COUNT
 
         events = []
 
@@ -239,7 +239,7 @@ def create_app(text_config=None):
 
             return jsonify({
                 'success': True,
-                'events': event[0]
+                'event': event[0]
             }), 200
         except Exception:
             print(sys.exc_info())
@@ -587,7 +587,7 @@ def create_app(text_config=None):
 
             return jsonify({
                 'success': True,
-                'event': formatted_event[0]
+                'deleted_event': formatted_event[0]
             }), 200
         except Exception:
             print(sys.exc_info())
