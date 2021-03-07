@@ -62,10 +62,9 @@ The same examle apply for upgrading the database using the manage.py file.
 
 ## Testing 
 
-The project is using postman and unittest to check that the endpoint are working correctly and a runner file is provided with the project so you can check that every endpoint is working corretly.
+In this project for unnitest in your local machine pleas update the postgres URI information on the test_api file to match your own postgres database.
 
-Unittest is use to check for public endpoint 
-Postman is use to check the public and jwt authentificated endpoint
+
 
 ## Running the server
 
