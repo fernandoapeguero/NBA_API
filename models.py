@@ -28,6 +28,10 @@ class Team(db.Model):
     losses = db.Column(db.String(10), default=0)
     home_city = db.Column(db.String(), nullable=False)
 
+    def __repr__(self):
+
+        return f'name: {self.name} \n home city: {self.homw_city} \n wins: {self.wins} \n losses: {self.losses} \n logo: {self.logo}'
+
     def __init__(self, name, logo, wins, losses, home_city):
 
         self.name = name
@@ -129,7 +133,7 @@ class Events(db.Model):
         'events', cascade='all,delete'))
 
     def __init__(self, team_id, team_id_two, venue_id, start_time, team_one_score = 0, team_two_score = 0):
-
+    
         self.team_id = team_id
         self.team_id_two = team_id_two
         self.venue_id = venue_id
