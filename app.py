@@ -1,9 +1,10 @@
+from werkzeug.exceptions import BadRequest
 from models import setup_db, Venue, Team, Events, Player
-from flask import json, jsonify, request
+from flask import json, jsonify, request, abort, Flask
 from auth import requires_auth, AuthError
-from flask import Flask, abort
 from sqlalchemy import or_
 from flask_cors import CORS
+import sys
 
 
 def create_app(text_config=None):
@@ -87,7 +88,8 @@ def create_app(text_config=None):
                 'players': players,
                 'total_players': len(players_list)
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(404)
 
     @app.route('/players/<int:player_id>')
@@ -101,7 +103,8 @@ def create_app(text_config=None):
                 'success': True,
                 'players': player.format()
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(404)
 
     @app.route('/players/<int:team_id>/teams')
@@ -120,7 +123,8 @@ def create_app(text_config=None):
                 'total_players': len(players_list)
             })
 
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(404)
 
     @app.route('/teams')
@@ -145,7 +149,8 @@ def create_app(text_config=None):
                 'total_teams': len(team_list)
             }), 200
 
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(404)
 
     @app.route('/teams/<int:team_id>')
@@ -158,7 +163,8 @@ def create_app(text_config=None):
                 'success': True,
                 'team': team.format()
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(404)
 
     @app.route('/venues')
@@ -182,7 +188,8 @@ def create_app(text_config=None):
                 'venues': formatted_venues,
                 'total_venues': len(venues)
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(404)
 
     @app.route('/venues/<int:venue_id>')
@@ -195,7 +202,8 @@ def create_app(text_config=None):
                 'success': True,
                 'venue': venue.format()
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(404)
 
     @app.route('/events')
@@ -214,7 +222,8 @@ def create_app(text_config=None):
                 'events': events,
                 'total_events': len(event_list)
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(404)
 
     @app.route('/events/<int:event_id>')
@@ -232,7 +241,8 @@ def create_app(text_config=None):
                 'success': True,
                 'events': event[0]
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(404)
 
     @app.route('/events/<int:team_id>/teams')
@@ -253,7 +263,8 @@ def create_app(text_config=None):
                 'total_events': len(events_list)
             }), 200
 
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(404)
 
     # POST Endpoints Group
@@ -294,7 +305,8 @@ def create_app(text_config=None):
                 'player': player.format()
             }), 200
 
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(400)
 
     @app.route('/teams', methods=['POST'])
@@ -322,7 +334,8 @@ def create_app(text_config=None):
                 'success': True,
                 'team': team.format()
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(400)
 
     @app.route('/venues', methods=['POST'])
@@ -356,7 +369,8 @@ def create_app(text_config=None):
                 'success': True,
                 'venue': venue.format()
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(404)
 
     @app.route('/events', methods=['POST'])
@@ -391,7 +405,8 @@ def create_app(text_config=None):
                 'event': formatted_event[0]
             }), 200
 
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(400)
 
     # PATH Endpoints Group
@@ -412,7 +427,7 @@ def create_app(text_config=None):
             player.team = player_data.get('team') or player.team
             player.mpg = player_data.get('mpg') or player.mpg
             player.ppg = player_data.get('ppg') or player.ppg
-            player.rpg = player_data.get('rpg') or player.rpg
+            player.rpg = player_data.get('rssssssdsspg') or player.rpg
             player.apg = player_data.get('apg') or player.apg
             player.team_id = player_data.get('team_id') or player.team_id
 
@@ -423,7 +438,8 @@ def create_app(text_config=None):
                 'updated_player': player.format()
             }), 200
 
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(422)
 
     @app.route('/teams/<int:team_id>', methods=['PATCH'])
@@ -446,7 +462,8 @@ def create_app(text_config=None):
                 'success': True,
                 'updated_team': team.format()
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(422)
 
     @app.route('/venues/<int:venue_id>', methods=['PATCH'])
@@ -471,7 +488,8 @@ def create_app(text_config=None):
                 'success': True,
                 'updated_venue': venue.format()
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(422)
 
     @app.route('/events/<int:event_id>', methods=['PATCH'])
@@ -500,7 +518,8 @@ def create_app(text_config=None):
                 'updated_event': formatted_event[0]
             }), 200
 
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(422)
 
     # DELETE Endpoint Group
@@ -518,7 +537,8 @@ def create_app(text_config=None):
                 'success': True,
                 'deleted_player': player.format()
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(422)
 
     @app.route('/teams/<int:team_id>', methods=['DELETE'])
@@ -534,7 +554,8 @@ def create_app(text_config=None):
                 'success': True,
                 'deleted_team': team.format()
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(422)
 
     @app.route('/venues/<int:venue_id>', methods=['DELETE'])
@@ -550,7 +571,8 @@ def create_app(text_config=None):
                 'success': True,
                 'deleted_venue': venue.format()
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(422)
 
     @app.route('/events/<int:event_id>', methods=['DELETE'])
@@ -567,7 +589,8 @@ def create_app(text_config=None):
                 'success': True,
                 'event': formatted_event[0]
             }), 200
-        except:
+        except Exception:
+            print(sys.exc_info())
             abort(422)
 
         # Error Handling
