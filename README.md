@@ -52,6 +52,14 @@ Running the project locally is very simple there are a couple of things you have
 
 In this project for unnitest in your local machine pleas update the postgres URI information on the test_api file to match your own postgres database.
 
+### Steps To Unittest 
+
+* Go to the model file and change the Environment variable of the database from DATABASE_URL to LOCAL_DATABASE_URL
+* Create your local database and update the name in the bash file URI.
+* Apply flask migration to the file example Python manage.py db upgrade 
+* Restore data to the databse for testing purposes 
+* Run Uniitest
+
 ### Importing Data to Postgres
 
 There is a file call db_nba.dump that is with the project it haves some data thtat can be use for testing purposes. To import the data to your postgress database use this command 
