@@ -48,18 +48,6 @@ Running the project locally is very simple there are a couple of things you have
 * Create a database to use in the project 
 * Run upgrage for flask migrate to create your tables 
 
-## How to run migration 
-
-for reference [Flask Migrate](https://flask-migrate.readthedocs.io/en/latest/) a database migrations for Flask applications using Alembic.
-
-In this project i'm using a file to manage the migration and that way is able to work on heroku as well so the way you will call it is the same but you have to use the file itself for example.
-
-* Normal migration call flask db migrate -m "some change to models"
-* Using manage.py file - python managepy. db migrate -m "some change to models"
-
-The same examle apply for upgrading the database using the manage.py file.
-
-
 ## Testing 
 
 In this project for unnitest in your local machine pleas update the postgres URI information on the test_api file to match your own postgres database.
@@ -79,6 +67,16 @@ You will need to change a couple of things. First create the database you want t
 Change the DATABASE_URL environment variable to LOCA_DATABASE_URL environ variable so you are able to perfom the database migration localy to the test database.
 
 
+## How to run migration 
+
+for reference [Flask Migrate](https://flask-migrate.readthedocs.io/en/latest/) a database migrations for Flask applications using Alembic.
+
+In this project i'm using a file to manage the migration and that way is able to work on heroku as well so the way you will call it is the same but you have to use the file itself for example.
+
+* Normal migration call flask db migrate -m "some change to models"
+* Using manage.py file - python managepy. db migrate -m "some change to models"
+
+The same examle apply for upgrading the database using the manage.py file.
 
 
 ## Running the server
