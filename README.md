@@ -5,6 +5,10 @@
 This projects is base on the nba it have endpoints for teams, players, venues and events. I Implemented a roles base access to the api depending on who you are the teams manager, venue management or the nba commission 
 you have different access too the api depending on your role you may be restricted from accesing, updating or creating information for the api
 
+## Motivation 
+
+My motivatin behind this project is to created a api that is not necessarily use in the nba but it can be use openly by any entity that plays basketball to have for their teams games for example high schools, colleges can use it and change the structure to suit them. I think this is a good starting point for a open source api that can expand and even be use in more places.
+
 # Getting Started
 
 ### Installing Dependencies
@@ -111,6 +115,48 @@ Error Handling Response
 responses with come back in a json object every error response follow the same format.
 
 <br>
+
+## Roles and Access
+
+This is the role structure for this project is does not represent everyway the project can be use you can update or change it to fit your needs.
+
+Team Management - Permission for this Role.
+
+```bash
+Post Players
+
+Patch Players
+Patch Teams
+
+Delete Players
+```
+
+Venue Management
+```bash
+Post Venues
+Post Events
+
+Patch Venues
+Patch Events
+
+Delete Venues
+Delete Events
+
+
+```
+
+Nba Comission
+```bash
+Post Players
+Post Teams
+
+Patch Players
+Patch Teams
+
+Delete Player
+Delete Teams 
+Delete Events
+```
 
 # Endpoint Library 
 
@@ -559,8 +605,6 @@ Response Sample
 
 ### POST/teams
 
-Role: Nba comission
-
 Post a team to the api Auth Require.
 
 
@@ -593,8 +637,6 @@ Response Sample
 <br>
 
 ### POST/venues
-
-Role Require: Venue Management
 
 Post a venue to the api Auth Require
 
@@ -631,8 +673,6 @@ Response Sample
 <br>
 
 ### POST/events
-
-Role Require: venue Management
 
 Post a event to the api Auth Require.
 
@@ -699,8 +739,6 @@ Response Sample
 
 ### PATCH/teams/TEAM_ID
 
-Role Require: team Management, Nba Comission
-
 Updated a team information in the api.
 
 Json Structure Sample 
@@ -729,8 +767,6 @@ Response Sample
 <br>
 
 ### PATCH/venues/VENUE_ID
-
-Role Require: venue management
 
 Updated a venue information on the api 
 
@@ -762,8 +798,6 @@ Response Sample
 <br>
 
 ### PATCH/events/EVENT_ID
-
-Role Require: Venue Management
 
 Updated a venue information in the api.
 
@@ -817,8 +851,6 @@ the endpoint will return the deleted player in the response.
 
 ### DELETE/teams/TEAM_ID
 
-Role Require: Nba Comission.
-
 Deletes a team from the api.
 
 the endpoint will return the deleted team in the response.
@@ -838,8 +870,6 @@ the endpoint will return the deleted team in the response.
 <br>
 
 ### DELETE/venues/VENUE_ID
-
-Role Require: Venue Management
 
 Deletes a venue from the api .
 
@@ -862,8 +892,6 @@ The endpoint will return the deleted venue in the response.
 <br>
 
 ### DELETE/events/EVENT_ID
-
-Role Require: Venue Management
 
 Delete a Event From the api.
 
