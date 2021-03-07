@@ -7,7 +7,7 @@ you have different access too the api depending on your role you may be restrict
 
 ## Motivation 
 
-My motivatin behind this project is to created a api that is not necessarily use in the nba but it can be use openly by any entity that plays basketball to have for their teams games for example high schools, colleges can use it and change the structure to suit them. I think this is a good starting point for a open source api that can expand and even be use in more places.
+My motivatin behind this project is to created an api that is not necessarily use in the nba but it can be use openly by any entity that plays basketball to have for their teams games for example high schools, colleges can use it and change the structure to suit them. I think this is a good starting point for a open source api that can expand and even be use in more places.
 
 # Getting Started
 
