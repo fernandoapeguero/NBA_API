@@ -64,6 +64,21 @@ The same examle apply for upgrading the database using the manage.py file.
 
 In this project for unnitest in your local machine pleas update the postgres URI information on the test_api file to match your own postgres database.
 
+### Importing Data to Postgres
+
+There is a file call db_nba.dump that is with the project it haves some data thtat can be use for testing purposes. To import the data to your postgress database use this command 
+
+```bash
+psql -U (postgres username) --dbname=(database name) db_nba.dump
+```
+> :warning: **You will need to run the command more than once because of the database contraint**: The contraint causes for some data to imported first because is needed for other to exists in the database!
+
+### How to run unittest in this project 
+
+You will need to change a couple of things. First create the database you want to use for testing or use the same name that is already declare. 
+Change the DATABASE_URL environment variable to LOCA_DATABASE_URL environ variable so you are able to perfom the database migration localy to the test database.
+
+
 
 
 ## Running the server
